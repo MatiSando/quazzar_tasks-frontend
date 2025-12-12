@@ -1,0 +1,195 @@
+<div class="qp-container">
+  <!-- ===== HEADER superior con logo y empresa ===== -->
+  <div class="qp-header">
+
+    <div class="qp-header-top">
+      <!-- Logo -->
+      <img src="assets/ZZ-2.png" alt="Logo QuazzarPro" class="qp-logo" />
+
+      <!-- Bloque empresa + usuario -->
+      <div class="qp-company-info">
+        <h2 class="qp-company">QuaZZar Technologies S.L.</h2>
+
+        <div class="qp-login-info">
+          <img src="assets/user.png" class="qp-user-icon" />
+          <!-- Nombre del usuario (signal) -->
+          <span class="qp-username">{{ userName() }}</span>
+          <!-- Cerrar sesión (dispara lógica con modal condicional desde TS) -->
+          <button class="qp-logout-btn" (click)="logout()">Cerrar sesión</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Barra azul corporativa -->
+    <div class="qp-divider"></div>
+
+    <!-- Título de la pantalla + botón volver -->
+    <div class="qp-header-row">
+      <h2 class="qp-title">Pintura</h2>
+      <button (click)="goHome()" class="qp-back-btn">⬅ Volver a tareas</button>
+    </div>
+  </div>
+
+  <!-- ===== Acciones globales ===== -->
+  <div class="qp-actions">
+    <!-- Vacía todas las tareas y campos de color -->
+    <button type="button" class="qp-btn qp-btn--ghost" (click)="clearAll()">
+      Limpiar todo
+    </button>
+
+    <!-- Botón “Terminar” habilitado solo cuando allComplete() === true -->
+    <button type="button" class="qp-btn qp-btn--primary" [disabled]="!allComplete()" (click)="finish()">
+      Terminar
+    </button>
+
+    <!-- Contador diario (solo aumenta al finalizar) -->
+    <span class="qp-badge">
+      Tareas finalizadas hoy: {{ dailyCount() }}
+    </span>
+  </div>
+
+  <!-- ===== Card: Definición de color ===== -->
+  <section class="qp-card color-input-card">
+    <header class="qp-card__header">
+      <h3 class="qp-card__title">Definición de color</h3>
+      <!-- Limpia únicamente los campos de color -->
+      <button
+        type="button"
+        class="qp-btn qp-btn--ghost"
+        (click)="colorDescripcion.set(''); colorRAL.set('');">
+        Limpiar
+      </button>
+    </header>
+
+    <!-- Barra de progreso opcional para inputs de color (dejada comentada por diseño) -->
+    <!--
+    <div class="qp-progress" style="margin-bottom: 20px;">
+      <div class="qp-progress__bar" [style.width.%]="colorInputsComplete() ? 100 : 0"></div>
+      <span class="qp-progress__label">
+        {{ colorInputsComplete() ? '✓ Color Definido' : 'Falta definir color' }}
+      </span>
+    </div>
+    -->
+
+    <!-- Campos de entrada de color -->
+    <div class="color-inputs-container">
+
+      <!-- Descripción de color (texto libre) -->
+      <div class="field">
+        <label for="color-desc" class="color-input-label">Descripción del color:</label>
+        <input
+          id="color-desc"
+          type="text"
+          class="qp-text-input"
+          [value]="colorDescripcion()"
+          (input)="onColorInputChange($event, 'descripcion')"
+          placeholder="Ej: Rojo Corsa Brillante" />
+      </div>
+
+      <!-- Código RAL (texto) -->
+      <div class="field">
+        <label for="color-ral" class="color-input-label">Código RAL:</label>
+        <input
+          id="color-ral"
+          type="text"
+          class="qp-text-input"
+          [value]="colorRAL()"
+          (input)="onColorInputChange($event, 'ral')"
+          placeholder="Ej: RAL 3000" />
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== Grid de secciones/tareas ===== -->
+  <div class="pt-grid">
+
+    <!-- Repite por cada sección del catálogo -->
+    <section class="qp-card" *ngFor="let sec of sections(); let si = index">
+      <header class="qp-card__header">
+        <h3 class="qp-card__title">{{ sec.name }}</h3>
+        <!-- Limpia solo la sección actual -->
+        <button type="button" class="qp-btn qp-btn--ghost" (click)="clearSection(si)">
+          Limpiar
+        </button>
+      </header>
+
+      <!-- Progreso de la sección -->
+      <div class="qp-progress">
+        <div class="qp-progress__bar" [style.width.%]="progress(sec)"></div>
+        <span class="qp-progress__label">{{ progress(sec) }}%</span>
+      </div>
+
+      <!-- Botonera de tareas (toggle done) -->
+      <div class="pt-tasks">
+        <button
+          type="button"
+          class="qp-btn qp-btn--task"
+          [class.is-done]="t.done"
+          *ngFor="let t of sec.tasks; let ti = index"
+          (click)="toggleTask(si, ti)">
+          {{ t.label }}
+        </button>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ===== MODAL: Finalizar ===== -->
+  <div class="qp-modal-backdrop" *ngIf="showModal()" (click)="closeModal()">
+    <!-- stopPropagation para que no se cierre al clicar dentro del modal -->
+    <div class="qp-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" (click)="$event.stopPropagation()">
+      <div class="qp-modal__header">
+        <h3 id="modal-title" class="qp-modal__title">¡Tareas completadas!</h3>
+        <img src="assets/ZZ-2.png" alt="" class="qp-modal__img" />
+      </div>
+
+      <div class="qp-modal__body">
+        <p>Has finalizado todas las tareas de pintura.</p>
+        <p>Puedes editar o finalizar si quieres comenzar una nueva tarea.</p>
+        <img src="assets/moto.gif" alt="moto" class="qp-modal__gif" />
+      </div>
+
+      <div class="qp-modal__footer">
+        <!-- Cierra modal para seguir editando -->
+        <button type="button" class="qp-btn qp-btn--ghost" (click)="closeModal()">Editar</button>
+        <!-- Dispara flujo iniciar/actualizar + finalizar + contador + limpiar -->
+        <button type="button" class="qp-btn qp-btn--primary" (click)="continueAndClear()">Finalizar >></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL: Guardar progreso antes de salir ===== -->
+<div class="qp-modal-backdrop" *ngIf="showLeaveModal()" (click)="cancelLeave()">
+  <div class="qp-modal" role="dialog" aria-modal="true" aria-labelledby="leave-modal-title" (click)="$event.stopPropagation()">
+
+    <div class="qp-modal__header">
+      <h3 id="leave-modal-title" class="qp-modal__title">¿Guardar progreso antes de salir?</h3>
+      <img src="assets/ZZ-velado.png" alt="Icono" class="qp-modal__img" />
+    </div>
+
+    <div class="qp-modal__body">
+      <!-- CORRECCIÓN: aquí antes ponía “Chasis”; lo cambié a “Pintura” -->
+      <p>Tienes cambios sin finalizar en <strong>Pintura</strong>.</p>
+      <p>Si guardas, quedarán como <strong>pendientes</strong> en la base de datos.</p>
+    </div>
+
+    <div class="qp-modal__footer">
+      <!-- Sale y descarta cambios locales -->
+      <button type="button" class="qp-btn qp-btn--primary" (click)="confirmLeaveWithoutSaving()">
+        Salir sin guardar
+      </button>
+
+      <!-- Guarda (upsert por id o iniciar) y navega -->
+      <button type="button" class="qp-btn qp-btn--primary" (click)="confirmSaveAndLeave()">
+        Guardar y salir
+      </button>
+
+      <!-- Cierra el modal y permanece en la página -->
+      <button type="button" class="qp-btn qp-btn--primary" (click)="cancelLeave()">
+        Cancelar
+      </button>
+    </div>
+  </div>
+</div>

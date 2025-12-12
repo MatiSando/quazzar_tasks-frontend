@@ -1,0 +1,599 @@
+:root {
+  /* Paleta y tokens del tema (colores y radios) */
+  --qp-bg: #cae6fc;
+  --qp-panel: #ffffff;
+  --qp-border: #e8e8ef;
+  --qp-text: #1f2937;
+  --qp-accent: #2563eb;
+  --qp-success: #22c55e;
+  --qp-radius: 14px;
+  --qp-shadow: 0 6px 24px rgba(0, 0, 0, .06);
+}
+
+/* === CONTENEDOR PRINCIPAL === */
+.qp-container {
+  background: var(--qp-bg);
+  min-height: 100vh;
+  padding: 0 12px 16px;
+  font-family: Montserrat Regular, sans-serif;
+}
+
+/* === HEADER CON LOGO === */
+.qp-header {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+/* Fila superior: logo izq. + info empresa/usuario dcha. */
+.qp-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+/* Logo corporativo */
+.qp-logo {
+  max-width: 130px;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Nombre de empresa (alineado a la derecha por layout del header) */
+.qp-company {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+/* === Bloque usuario (avatar + nombre + logout) === */
+.qp-login-info {
+  margin-left: auto;
+  margin-right: 20px;
+  font-size: 14px;
+  color: var(--qp-text);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.qp-user-icon {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+/* Botón de cerrar sesión (bordeado, invierte en hover) */
+.qp-logout-btn {
+  background: transparent;
+  color: #1D71B8;
+  border: 2px solid #1D71B8;
+  padding: 6px 14px;
+  border-radius: 3px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: auto;
+  margin-top: 6px;
+  transition: .2s;
+}
+.qp-logout-btn:hover {
+  background: #1D71B8;
+  color: white;
+}
+
+/* Franja azul corporativa a todo el ancho (truco con 100vw centrado) */
+.qp-divider {
+  position: relative;
+  left: 50%;
+  right: 50%;
+  width: 100vw;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  height: 12px;
+  background: linear-gradient(45deg, #1d72b8, #0BBBEF);
+}
+
+/* === Fila con título y botón volver === */
+.qp-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+/* Título de página */
+.qp-title {
+  font-size: 26px;
+  color: #1f2937;
+  margin-top: 5px;
+  text-align: left;
+  margin-bottom: 0;
+}
+
+/* Botón volver (bordeado, invierte en hover) */
+.qp-back-btn {
+  background: #ffffff;
+  color: #1D71B8;
+  border: 2px solid #1D71B8;
+  padding: 8px 16px;
+  border-radius: 3px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+  margin-top: 10px;
+}
+.qp-back-btn:hover {
+  background: #1D71B8;
+  color: #ffffff;
+}
+
+/* === GRID DE TARJETAS (secciones/columnas adaptativas) === */
+.qp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  align-items: stretch;
+}
+
+/* === TARJETA GENÉRICA === */
+.qp-card {
+  background: var(--qp-panel);
+  border: 2px solid #d6d9dd;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 10px;
+  transition: all 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Header de tarjeta: título + acciones */
+.qp-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  border-bottom: 1px solid #e3e6ec;
+  padding-bottom: 4px;
+}
+
+/* Título de tarjeta */
+.qp-card__title {
+  font-size: 20px;
+  margin-bottom: 0;
+  grid-column: 2;
+  justify-self: center;
+  margin: 0;
+}
+
+/* Contenido de tarjeta (stack vertical) */
+.qp-card__content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1 1 auto;
+}
+
+/* Footer de tarjeta: zona de botones secundarios */
+.qp-card__footer {
+  margin-top: 2px;
+  text-align: center;
+}
+.qp-card__footer .qp-btn {
+  width: 100%;
+  border-radius: 5px;
+  padding: 8px;
+  font-size: 13px;
+}
+
+/* === BARRA DE PROGRESO (contenedor + barra + etiqueta) === */
+.qp-progress {
+  position: relative;
+  width: 100%;
+  height: 22px;
+  background: #eef1f6;
+  border: 1px solid #4ADE80;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 5px;
+}
+.qp-progress__bar {
+  display: block;
+  height: 100%;
+  width: 0;
+  transition: width .25s ease;
+  background: linear-gradient(90deg, #0BBBEF, #6aff00);
+}
+.qp-progress__label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: #0b2447;
+}
+
+/* === BOTONES BASE Y VARIANTES === */
+.qp-btn {
+  cursor: pointer;
+  border-radius: 10px;
+  border: 10px solid var(--qp-border); /* ojo: Borde grueso por diseño actual */
+  padding: 10px 12px;
+  font-size: 14px;
+  transition: all .2s ease;
+  margin-bottom: 8px;
+  color: red; /* color de texto por defecto en el botón base */
+}
+
+/* Botón de TAREA (normal) */
+.qp-btn--task {
+  width: 100%;
+  border: 1px solid #d6d9dd;
+  border-radius: 10px;
+  background: #f9fafb;
+  text-align: left;
+}
+.qp-btn--task:hover {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+/* Botón de TAREA (marcado como hecho) */
+.qp-btn--task.is-done {
+  background-color: #6aff00;
+  color: #0b3b10;
+  font-weight: 600;
+}
+
+/* Botón “ghost” (secundario) */
+.qp-btn--ghost {
+  background-color: #1D71B8;
+  color: #ffffff;
+  border: 1px solid #cfd6e0;
+  border-radius: 3px;
+  box-shadow: 0 3px 8px rgba(37, 99, 235, 0.4);
+  transition: all 0.2s ease;
+}
+.qp-btn--ghost:hover {
+  background: #f2f5f9;
+  border-color: #aab3c2;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+  color: black;
+}
+
+/* Botón “primary” (principal de acción) */
+.qp-btn--primary {
+  background-color: #1D71B8;
+  color: #ffffff;
+  border-radius: 3px;
+  box-shadow: 0 3px 8px rgba(37, 99, 235, 0.4);
+  transition: all 0.2s ease;
+  margin: 10px;
+}
+.qp-btn--primary:hover:not(:disabled) {
+  background: #1e4fd1;
+  box-shadow: 0 5px 12px rgba(37, 99, 235, 0.45);
+  transform: translateY(-1px);
+}
+.qp-btn--primary:disabled {
+  opacity: 0.6;
+  box-shadow: none;
+  cursor: not-allowed;
+  color: #000000;
+}
+
+/* Acciones globales (fila superior de botones) */
+.qp-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* antes center */
+  gap: 12px;
+  margin-top: 16px;
+  width: 100%;
+}
+
+/* ===== MODAL (backdrop + caja) ===== */
+.qp-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 60px;
+  z-index: 1100;
+}
+.qp-modal {
+  width: 100%;
+  max-width: 610px;
+  background: #ffffff;
+  border: 1px solid #1D71B8;
+  border-radius: 14px;
+  box-shadow: 0 18px 60px rgba(0, 0, 0, .25);
+  overflow: hidden;
+  animation: modal-pop .15s ease-out;
+  font-family: Montserrat Regular, sans-serif;
+  font-size: 20px;
+}
+
+/* Animación ligera de entrada modal */
+@keyframes modal-pop {
+  from { transform: scale(.98); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+/* Header del modal: título + icono */
+.qp-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid #1D71B8;
+  background: #1D71B8;
+}
+.qp-modal__title {
+  margin: 0;
+  font-weight: 700;
+  color: #ffffff;
+  font-size: 20px;
+}
+.qp-modal__img {
+  width: 50px;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Cuerpo del modal */
+.qp-modal__body {
+  padding: 18px 16px;
+  color: #334155;
+  margin-bottom: 0;
+}
+
+/* Imagen/gif dentro del modal (decorativa) */
+.qp-modal__gif {
+  display: block;
+  width: 120px;
+  height: auto;
+  margin: 16px auto 0;
+  object-fit: contain;
+}
+
+/* Fila info + imagen en modal */
+.qp-modal__info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 0 16px;
+}
+.qp-modal__info p {
+  margin: 4px 0;
+  font-size: 20px;
+}
+
+/* Footer del modal (botonera) */
+.qp-modal__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 12px 16px 16px;
+}
+/* Propiedades comunes de botones en modal */
+.qp-modal__footer .qp-btn {
+  min-width: 120px;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  transition: all 0.25s ease;
+}
+/* Botón primario dentro del modal (bordeado) */
+.qp-modal__footer .qp-btn--primary {
+  background-color: #ffffff;
+  color: #1D71B8;
+  border: 2px solid #1D71B8;
+}
+.qp-modal__footer .qp-btn--primary:hover:not(:disabled) {
+  background-color: #1D71B8;
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(29, 113, 184, 0.4);
+}
+/* Botón ghost dentro del modal (mismo estilo invertible) */
+.qp-modal__footer .qp-btn--ghost {
+  background-color: #ffffff;
+  color: #1D71B8;
+  border: 2px solid #1D71B8;
+}
+.qp-modal__footer .qp-btn--ghost:hover {
+  background-color: #1D71B8;
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(29, 113, 184, 0.4);
+}
+/* Estado deshabilitado dentro del modal */
+.qp-modal__footer .qp-btn:disabled {
+  opacity: 0.6;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* === CARD “Datos del vehículo” (Color + Bastidor) === */
+.vehicle-card {
+  margin-bottom: 14px;
+}
+
+/* Grid interno responsive de la card de vehículo */
+.vehicle-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+/* Campo de formulario (stack vertical) */
+.vf-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Etiqueta de campo */
+.vf-label {
+  font-weight: 600;
+  color: #000000;
+  font-size: 18px;
+  margin-top: 15px;
+}
+
+/* Fila de color: selector + “dot” (si se usa) */
+.vf-color-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Vista previa del color seleccionado */
+.vf-color-preview {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid rgba(0, 0, 0, .25);
+  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, .05);
+  background: #fff;
+}
+.vf-color-preview.is-empty {
+  background: white;
+}
+
+/* Select de color */
+.vf-select {
+  width: 50%;
+  padding: 10px 12px;
+  border: 1px solid #cfd6e0;
+  border-radius: 8px;
+  font-size: 14px;
+  background: #ffffff;
+}
+.vf-select:focus {
+  outline: none;
+  border-color: #1D71B8;
+  box-shadow: 0 0 0 3px rgba(29, 113, 184, .15);
+}
+
+/* Input de bastidor (VIN) */
+.vf-input {
+  width: 50%;
+  padding: 10px 12px;
+  border: 1px solid #cfd6e0;
+  border-radius: 8px;
+  font-size: 14px;
+  background: #ffffff;
+}
+.vf-input:focus {
+  outline: none;
+  border-color: #1D71B8;
+  box-shadow: 0 0 0 3px rgba(29, 113, 184, .15);
+}
+
+/* Puntito de color en modal (decoración) */
+.modal-color-dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, .25);
+  vertical-align: middle;
+  margin-right: 3px;
+  margin-bottom: 6px;
+}
+
+/* ===== CONTADOR DE HOY (badge) ===== */
+.qp-badge {
+  align-self: center;
+  padding: 6px 10px;
+  font-weight: 700;
+  font-size: 14px;
+  margin-left: auto;
+  margin-right: 20px;
+}
+
+/* Responsive para acciones y badge en móvil */
+@media (max-width: 560px) {
+  .qp-actions {
+    flex-wrap: wrap;
+  }
+  .qp-badge {
+    order: 3;
+    width: 100%;
+    text-align: center;
+    margin-top: 6px;
+  }
+}
+
+/* Fila superior de acciones (limpiar/terminar/contador) */
+.qp-top-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+  width: 100%;
+}
+.qp-top-actions .qp-btn {
+  margin: 0;
+}
+
+/* Campo VIN contenedor para posicionar el chip de estado */
+.vin-field {
+  position: relative;
+}
+
+/* Chip de estado del VIN (posicionado a la derecha del input) */
+.vin-chip {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+  user-select: none;
+}
+
+/* Variantes visuales del chip VIN según estado */
+.vin-chip--checking {
+  background: #e5e7eb;
+  color: #374151;
+}
+.vin-chip--ok {
+  background: #dcfce7;
+  color: #166534;
+  border: 1px solid #86efac;
+}
+.vin-chip--dup {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+}
+.vin-chip--invalid {
+  background: #fde68a;
+  color: #92400e;
+  border: 1px solid #fcd34d;
+}
+
+/* Ayuda textual bajo el input VIN */
+.vin-help {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  color: #6b7280;
+}

@@ -1,0 +1,363 @@
+/* ===== Variables base ===== */
+:root {
+  --qp-bg: #cae6fc;
+  --qp-panel: #ffffff;
+  --qp-border: #e8e8ef;
+  --qp-text: #1f2937;
+  --qp-accent: #1D71B8;
+  --qp-success: #22c55e;
+  --qp-danger: #b91c1c;
+  --muted: #64748b;
+}
+
+/* Reset mínimo */
+* { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body { overflow-x: hidden; }
+
+/* ============================================================
+   CONTENEDOR GENERAL
+============================================================ */
+.qp-container{
+  background: var(--qp-bg);
+  min-height: 100vh;
+  padding: 0 12px 16px;
+  font-family: Montserrat Regular, sans-serif;
+}
+
+/* === HEADER CON LOGO === */
+.qp-header {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+/* Parte superior: logo a la izquierda, texto a la derecha */
+.qp-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+/* Logo */
+.qp-logo {
+  max-width: 130px;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Nombre de empresa alineado a la derecha */
+.qp-company {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+/*usuario*/
+.qp-login-info {
+  margin-left: auto;
+  margin-right: 20px;
+  font-size: 14px;
+  color: var(--qp-text);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.qp-user-icon {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+/*Boton Logout*/
+.qp-logout-btn {
+  background: transparent;
+  color: #1D71B8;
+  border: 2px solid #1D71B8;
+  padding: 6px 14px;
+  border-radius: 3px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: auto;
+  margin-top: 6px;
+  transition: .2s;
+}
+
+.qp-logout-btn:hover {
+  background: #1D71B8;
+  color: white;
+}
+
+/* Línea azul */
+.qp-divider {
+  position: relative;
+  left: 50%;
+  right: 50%;
+  width: 100vw;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  height: 12px;
+  background: linear-gradient(45deg, #1d72b8, #0BBBEF);
+}
+
+/* ============================================================
+   LAYOUT
+============================================================ */
+.qp-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.qp-main { min-width: 0; }
+
+/* Título + volver */
+.qp-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 6px;
+  margin-bottom: 40px;
+}
+
+.qp-title {
+  font-size: 26px;
+  font-weight: 600;
+  margin: 10px 0 18px;
+}
+
+/* Botón volver */
+.qp-back-btn {
+  background: #ffffff;
+  color: #1D71B8;
+  border: 2px solid #1D71B8;
+  padding: 8px 16px;
+  border-radius: 3px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+  margin-top: 10px;
+}
+.qp-back-btn:hover {
+  background: #1D71B8;
+  color: #ffffff;
+}
+
+/* === BOTONES (base y variantes) === */
+.qp-btn {
+  cursor: pointer;
+  border-radius: 10px;
+  border: 10px solid var(--qp-border);
+  padding: 10px 12px;
+  font-size: 14px;
+  transition: all .2s ease;
+  margin-bottom: 8px;
+  color: red;
+}
+
+/* Estado normal botón de tarea */
+.qp-btn--task {
+  width: 100%;
+  border: 1px solid #d6d9dd;
+  border-radius: 10px;
+  background: #f9fafb;
+  text-align: left;
+}
+.qp-btn--task:hover {
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.qp-btn--task.is-done {
+  background-color: #6aff00;
+  color: #0b3b10;
+  font-weight: 600;
+}
+
+/* Botones secundarios */
+.qp-btn--ghost {
+  background-color: #1D71B8;
+  color: #ffffff;
+  border: 1px solid #cfd6e0;
+  border-radius: 3px;
+  box-shadow: 0 3px 8px rgba(37,99,235,0.4);
+  transition: all 0.2s ease;
+  width: 100px;
+  height: 30px;
+}
+.qp-btn--ghost:hover {
+  background: #f2f5f9;
+  border-color: #aab3c2;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+  transform: translateY(-1px);
+  color: black;
+}
+
+
+
+/* ============================================================
+   RESUMEN
+============================================================ */
+.qp-pending-summary {
+  background: #e0f2fe;
+  border: 1px solid #93c5fd;
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+.qp-pending-summary strong { font-weight: 700; }
+
+/* Botón primario reutilizable (ej: dentro de summary / acciones) */
+.qp-summary-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 8px 14px;
+  background: var(--qp-accent);
+  color: #fff;
+  border-radius: 3px;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 3px 8px rgba(37, 99, 235, .4);
+  transition: .2s;
+}
+.qp-summary-btn:hover {
+  background: #1e4fd1;
+  transform: translateY(-1px);
+}
+.qp-summary-btn:focus-visible {
+  outline: 3px solid rgba(29, 113, 184, .25);
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   LISTA DE PENDIENTES (tarjetas)
+============================================================ */
+.qp-pending-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Card */
+.qp-pending-card {
+  background: #fff;
+  padding: 14px 16px;
+  border-bottom: 3px solid #b3cdfb;
+}
+
+.qp-pending-card-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+}
+
+/* Lista de datos/estado dentro de la card */
+.qp-pending-tasks {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 10px 0; /* deja aire antes de las acciones */
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.qp-pending-task {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+/* puntito de estado */
+.qp-pending-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #f97316; /* pendiente */
+}
+
+/* texto truncable */
+.qp-pending-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* chip de estado */
+.qp-pending-status {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: #fee2e2;
+  color: var(--qp-danger);
+}
+
+/* si la tarea está hecha */
+.qp-pending-task.done .qp-pending-dot { background: var(--qp-success); }
+.qp-pending-task.done .qp-pending-status {
+  background: #dcfce7;
+  color: #166534;
+}
+
+/* Acciones de la card (p. ej. botón Retomar) */
+.qp-pending-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* Reutilizamos el estilo de botón primario para Retomar */
+.qp-pending-actions .qp-summary-btn { margin-top: 0; }
+
+/* Mensaje vacío */
+.qp-pending-empty {
+  margin-top: 10px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+@media (max-width: 760px) {
+  .qp-header-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .qp-back-btn {
+    margin-top: 0;
+    padding: 8px 14px;
+  }
+
+  .qp-pending-task {
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "label status";
+    row-gap: 4px;
+  }
+
+  .qp-pending-dot { display: none; }
+
+  .qp-pending-label { grid-area: label; white-space: normal; }
+  .qp-pending-status { grid-area: status; }
+}

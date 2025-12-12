@@ -1,0 +1,236 @@
+<div class="qp-container">
+
+  <!-- =========================
+       HEADER (Logo + Empresa)
+       ========================= -->
+  <div class="qp-header">
+    <div class="qp-header-top">
+      <!-- Logo corporativo -->
+      <img src="assets/ZZ-2.png" alt="Logo QuazzarPro" class="qp-logo" />
+      <!-- Nombre de la empresa -->
+      <h2 class="qp-company">QuaZZar Technologies S.L.</h2>
+    </div>
+
+    <!-- Separador azul que ocupa el ancho completo -->
+    <div class="qp-divider"></div>
+
+    <!-- Título de la pantalla -->
+    <div class="qp-header-row">
+      <h2 class="qp-title">Iniciar sesión</h2>
+    </div>
+  </div>
+
+  <!-- =========================
+       CARD de Login (contenedor principal del formulario)
+       ========================= -->
+  <section class="qp-card auth-card">
+    <header class="qp-card__header">
+      <h3 class="qp-card__title">Accede a tu cuenta</h3>
+    </header>
+
+    <!--
+      Formulario reactivo:
+      - [formGroup]="form" enlaza con el FormGroup creado en el TS.
+      - (ngSubmit)="onSubmit()" llama a la función de login al enviar.
+      - novalidate desactiva validación HTML por defecto (usamos Angular).
+      - class="auth-form" es solo para estilos.
+    -->
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate class="auth-form">
+
+      <!-- =========================
+           Campo EMAIL
+           ========================= -->
+      <div class="vf-field">
+        <label for="email" class="vf-label">Email</label>
+
+        <!--
+          formControlName="email" vincula el input con el control 'email'
+          definido en el FormGroup.
+          autocomplete="username" ayuda al navegador a rellenar.
+        -->
+        <input
+          id="email"
+          type="email"
+          class="vf-input"
+          formControlName="email"
+          autocomplete="username"
+          placeholder="tucorreo@quazzar.es"
+        />
+
+        <!--
+          Mensajes de error del email:
+          Se muestran solo si el usuario tocó el campo (touched) y hay errores.
+        -->
+        <small class="vf-hint" *ngIf="f.email.touched && f.email.errors">
+          <ng-container *ngIf="f.email.errors['required']">
+            El email es obligatorio.
+          </ng-container>
+          <ng-container *ngIf="f.email.errors['email']">
+            Introduce un email válido.
+          </ng-container>
+        </small>
+      </div>
+
+      <!-- =========================
+           Campo PASSWORD
+           ========================= -->
+      <div class="vf-field">
+        <label for="password" class="vf-label">Contraseña</label>
+
+        <!--
+          password-row agrupa input + botón de mostrar/ocultar.
+          [type] alterna entre 'text' y 'password' usando showPassword().
+        -->
+        <div class="password-row">
+          <input
+            id="password"
+            [type]="showPassword() ? 'text' : 'password'"
+            class="vf-input"
+            formControlName="password"
+            autocomplete="current-password"
+            placeholder="********"
+          />
+
+          <!-- Botón para alternar visibilidad de la contraseña -->
+          <button
+            type="button"
+            class="toggle-pass"
+            (click)="toggleShowPassword()"
+          >
+            {{ showPassword() ? 'Ocultar' : 'Mostrar' }}
+          </button>
+        </div>
+
+        <!--
+          Mensajes de error de la contraseña:
+          - required: obligatoria
+          - minlength: mínimo de caracteres (leído del validador)
+        -->
+        <small class="vf-hint" *ngIf="f.password.touched && f.password.errors">
+          <ng-container *ngIf="f.password.errors['required']">
+            La contraseña es obligatoria.
+          </ng-container>
+          <ng-container *ngIf="f.password.errors['minlength']">
+            Mínimo {{ f.password.errors['minlength'].requiredLength }} caracteres.
+          </ng-container>
+        </small>
+      </div>
+
+      <!-- =========================
+           Error general del login
+           (por ejemplo, credenciales incorrectas o error de servidor)
+           ========================= -->
+      <div class="form-error" *ngIf="errorMsg()">
+        {{ errorMsg() }}
+      </div>
+
+      <!-- =========================
+           Botón Enviar
+           - Deshabilitado si el formulario es inválido o está cargando.
+           - Texto dinámico según loading().
+           ========================= -->
+      <button
+        class="qp-btn qp-btn--primary submit-btn"
+        [disabled]="form.invalid || loading()"
+      >
+        {{ loading() ? 'Entrando…' : 'Entrar' }}
+      </button>
+
+    </form>
+  </section>
+
+  <!-- =========================
+       MODAL: Cambio de contraseña obligatorio
+       (aparece si el usuario entra con la password por defecto '1234')
+       ========================= -->
+  <div
+    class="change-modal-backdrop"
+    *ngIf="showChangePassModal()"
+    (click)="cancelarCambio()"
+  >
+    <!--
+      stopPropagation() evita que al hacer click dentro del modal
+      se cierre por el click en el backdrop.
+    -->
+    <div class="change-modal" (click)="$event.stopPropagation()">
+
+      <!-- Título y texto informativo -->
+      <h3 class="change-modal__title">Cambiar contraseña</h3>
+      <p class="change-modal__text">
+        Has iniciado sesión utilizando la contraseña por defecto
+        <strong>1234</strong>.<br>
+        Por seguridad, debes establecer una nueva contraseña.
+      </p>
+
+      <!--
+        Formulario reactivo del modal:
+        - [formGroup]="changeForm" usa el FormGroup de cambio de contraseña.
+        - (ngSubmit)="submitNewPassword()" envía la nueva contraseña al backend.
+      -->
+      <form
+        [formGroup]="changeForm"
+        (ngSubmit)="submitNewPassword()"
+        class="change-form"
+      >
+        <!-- Nueva contraseña -->
+        <div class="vf-field">
+          <label class="vf-label">Nueva contraseña</label>
+          <input
+            type="password"
+            placeholder="Nueva contraseña"
+            class="vf-input"
+            formControlName="newPassword"
+          />
+        </div>
+
+        <!-- Repetir contraseña -->
+        <div class="vf-field">
+          <label class="vf-label">Repetir contraseña</label>
+          <input
+            type="password"
+            placeholder="Repite la contraseña"
+            class="vf-input"
+            formControlName="confirmPassword"
+          />
+        </div>
+
+        <!-- Mensaje de error dentro del modal (validación o error del backend) -->
+        <div class="form-error" *ngIf="changeError()">
+          {{ changeError() }}
+        </div>
+
+        <!-- Botonera del modal -->
+        <div class="change-modal__footer">
+          <!-- Cancelar: cierra el modal y limpia el formulario -->
+          <button type="button" class="qp-btn" (click)="cancelarCambio()">
+            Cancelar
+          </button>
+
+          <!-- Guardar: envía el formulario;
+               se deshabilita mientras changeLoading() es true -->
+          <button
+            type="submit"
+            class="qp-btn qp-btn--primary"
+            [disabled]="changeLoading()"
+          >
+            {{ changeLoading() ? 'Guardando…' : 'Guardar' }}
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- =========================
+       SPLASH con logo (opcional)
+       - Si lo quieres activar: descomenta el bloque y controla showSplash() desde TS.
+       ========================= -->
+  <!--
+  <div class="splash-backdrop" *ngIf="showSplash()">
+    <div class="splash-stage">
+      <img class="splash-logo" src="assets/ZZ.png" alt="Logo QuazzarPro" />
+    </div>
+  </div>
+  -->
+
+</div>

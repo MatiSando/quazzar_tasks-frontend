@@ -1,0 +1,98 @@
+<div class="qp-container">
+  <!-- ==========================================================
+       CABECERA PRINCIPAL DE LA PÁGINA HOME
+       Contiene el logo, el nombre de la empresa y la sesión del usuario.
+       ========================================================== -->
+  <div class="qp-header">
+
+    <!-- ---- Fila superior: logo a la izquierda, empresa y usuario a la derecha ---- -->
+    <div class="qp-header-top">
+      <!-- Logo de QuaZZarPro -->
+      <img src="assets/ZZ-2.png" alt="Logo QuazzarPro" class="qp-logo" />
+
+      <!-- Información de la empresa + usuario -->
+      <div class="qp-company-info">
+        <!-- Nombre de la empresa -->
+        <h2 class="qp-company">QuaZZar Technologies S.L.</h2>
+
+        <!-- Datos del usuario logueado -->
+        <div class="qp-login-info">
+          <!-- Icono del usuario -->
+          <img src="assets/user.png" class="qp-user-icon" />
+          <!-- Nombre del usuario obtenido de la señal userName() -->
+          <span class="qp-username">{{ userName() }}</span>
+          <!-- Botón para cerrar sesión -->
+          <button class="qp-logout-btn" (click)="logout()">Cerrar sesión</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Línea divisoria azul que separa la cabecera del contenido -->
+    <div class="qp-divider"></div>
+
+    <!-- ==========================================================
+         TÍTULO PRINCIPAL DE LA PÁGINA
+         Indica al usuario que debe seleccionar un área de trabajo.
+         ========================================================== -->
+    <h2 class="qp-title">Selecciona un Área</h2>
+
+    <!-- ==========================================================
+         SECCIÓN DE BOTONES DE ACCESO
+         Cada botón redirige a un módulo diferente de la aplicación.
+         Se utiliza routerLink para la navegación interna en Angular.
+         ========================================================== -->
+    <div class="home-buttons">
+
+      <!-- BOTÓN: Pintura -->
+      <button
+        type="button"
+        routerLink="/pintura"
+        class="home-btn"
+        aria-label="Ir a Pintura">
+        <img src="assets/icons/pintura_ico.png" alt="" class="home-btn__icon" />
+        <span>Pintura</span>
+      </button>
+
+      <!-- BOTÓN: Chasis -->
+      <button
+        type="button"
+        routerLink="/chasis"
+        class="home-btn"
+        aria-label="Ir a Chasis">
+        <img src="assets/icons/chasis_ico.png" alt="" class="home-btn__icon" />
+        <span>Chasis</span>
+      </button>
+
+      <!-- BOTÓN: Premontaje -->
+      <button
+        type="button"
+        routerLink="/premontaje"
+        class="home-btn"
+        aria-label="Ir a Premontaje">
+        <img src="assets/icons/premontaje.png" alt="" class="home-btn__icon" />
+        <span>Premontaje</span>
+      </button>
+
+      <!-- BOTÓN: Montaje -->
+      <button
+        type="button"
+        routerLink="/montaje"
+        class="home-btn"
+        aria-label="Ir a Montaje">
+        <img src="assets/icons/montaje_ico.png" alt="" class="home-btn__icon" />
+        <span>Montaje</span>
+      </button>
+
+      <!-- BOTÓN: Tareas Pendientes -->
+      <button
+        type="button"
+        routerLink="/pendientes"
+        class="home-btn"
+        aria-label="Ir a Pendientes">
+        <img src="assets/icons/pendientes_ico.png" alt="" class="home-btn__icon" />
+        <span>Tareas pendientes</span>
+      </button>
+
+    </div> <!-- Fin .home-buttons -->
+  </div> <!-- Fin .qp-header -->
+</div> <!-- Fin .qp-container -->

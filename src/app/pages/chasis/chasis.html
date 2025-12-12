@@ -1,0 +1,134 @@
+<div class="qp-container">
+  <!-- ===== CABECERA ===== -->
+  <div class="qp-header">
+    <div class="qp-header-top">
+      <img src="assets/ZZ-2.png" alt="Logo QuazzarPro" class="qp-logo" />
+
+      <div class="qp-company-info">
+        <h2 class="qp-company">QuaZZar Technologies S.L.</h2>
+
+        <div class="qp-login-info">
+          <img src="assets/user.png" class="qp-user-icon" />
+          <span class="qp-username">{{ userName() }}</span>
+          <button class="qp-logout-btn" (click)="logout()">Cerrar sesión</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="qp-divider"></div>
+
+    <div class="qp-header-row">
+      <h2 class="qp-title">Chasis</h2>
+      <button (click)="goHome()" class="qp-back-btn">⬅ Volver a tareas</button>
+    </div>
+  </div>
+
+  <!-- ===== ACCIONES GLOBALES ===== -->
+  <div class="qp-actions">
+    <button type="button" class="qp-btn qp-btn--ghost" (click)="clearAll()">
+      Limpiar todo
+    </button>
+
+    <button class="qp-btn qp-btn--primary" [disabled]="!canFinish()" (click)="finish()">
+      Terminar
+    </button>
+
+    <span class="qp-badge">
+      Tareas finalizadas hoy: {{ dailyCount() }}
+    </span>
+  </div>
+
+  <!-- ===== CARD: BASTIDOR ===== -->
+  <section class="qp-card vehicle-card">
+    <header class="vehicle-card__header">
+      <h3 class="vehicle-card__title">Número de bastidor</h3>
+      <button type="button" class="qp-btn vehicle-card__clean" (click)="clearBastidor()">Limpiar</button>
+    </header>
+
+    <div class="vehicle-form">
+      <div class="vf-field vf-field--full">
+        <input
+          #vin
+          class="vf-input vf-input--selectlike"
+          type="text"
+          maxlength="17"
+          [value]="bastidor()"
+          (input)="onBastidorInput(vin.value)"
+          placeholder="Introduce bastidor (17 caracteres)" />
+      </div>
+
+      <small class="vin-chip vin-chip--ok" *ngIf="vinState() === 'ok'">
+        Bastidor disponible.
+      </small>
+
+      <small class="vin-chip vin-chip--invalid" *ngIf="vinState() === 'invalid'">
+        Bastidor inválido o inexistente.
+      </small>
+
+      <small class="vin-chip vin-chip--dup" *ngIf="vinState() === 'finalized'">
+        Este bastidor ya fue usado en una tarea <strong>finalizada</strong> de Chasis.
+      </small>
+    </div>
+  </section>
+
+  <!-- ===== CARD: TAREAS ===== -->
+  <div class="qp-card">
+    <div class="qp-progress">
+      <div class="qp-progress__bar" [style.width.%]="progress()"></div>
+      <span class="qp-progress__label">{{ progress() }}%</span>
+    </div>
+
+    <div class="ch-grid">
+      <button
+        type="button"
+        class="qp-btn qp-btn--task"
+        [class.is-done]="t.done"
+        (click)="toggleTask(i)"
+        *ngFor="let t of tasks(); let i = index">
+        {{ t.label }}
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: FINALIZAR ===== -->
+  <div class="qp-modal-backdrop" *ngIf="showFinishModal()" (click)="closeFinishModal()">
+    <div class="qp-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" (click)="$event.stopPropagation()">
+      <div class="qp-modal__header">
+        <h3 id="modal-title" class="qp-modal__title">¡Tareas completadas!</h3>
+        <img src="assets/ZZ-velado.png" alt="Icono" class="qp-modal__img" />
+      </div>
+
+      <div class="qp-modal__body">
+        <p>Has finalizado todas las tareas de chasis.</p>
+        <p>Puedes editar o finalizar si quieres comenzar un nuevo chasis.</p>
+        <img src="assets/moto.gif" alt="moto" class="qp-modal__gif" />
+      </div>
+
+      <div class="qp-modal__footer">
+        <button type="button" class="qp-btn qp-btn--ghost" (click)="closeFinishModal()">Editar</button>
+        <button type="button" class="qp-btn qp-btn--primary" (click)="continueAndClear()">Finalizar >></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL: SALIR CON CAMBIOS PENDIENTES ===== -->
+<div class="qp-modal-backdrop" *ngIf="showLeaveModal()" (click)="closeModalLeave()">
+  <div class="qp-modal" role="dialog" aria-modal="true" aria-labelledby="leave-modal-title" (click)="$event.stopPropagation()">
+    <div class="qp-modal__header">
+      <h3 id="leave-modal-title" class="qp-modal__title">¿Guardar progreso antes de salir?</h3>
+      <img src="assets/ZZ-velado.png" alt="Icono" class="qp-modal__img" />
+    </div>
+
+    <div class="qp-modal__body">
+      <p>Tienes cambios sin finalizar en <strong>Chasis</strong>.</p>
+      <p>Si guardas, quedarán como <strong>pendientes</strong> en la base de datos.</p>
+    </div>
+
+    <div class="qp-modal__footer">
+      <button type="button" class="qp-btn qp-btn--primary" (click)="confirmLeaveWithoutSaving()">Salir sin guardar</button>
+      <button type="button" class="qp-btn qp-btn--primary" (click)="confirmSaveAndLeave()">Guardar y salir</button>
+      <button type="button" class="qp-btn qp-btn--ghost" (click)="closeModalLeave()">Cancelar</button>
+    </div>
+  </div>
+</div>

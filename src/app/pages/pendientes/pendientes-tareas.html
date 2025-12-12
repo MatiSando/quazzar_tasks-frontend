@@ -1,0 +1,111 @@
+<div class="qp-container">
+  <!-- =========================================================
+       CABECERA (logo + empresa + usuario + logout)
+       ========================================================= -->
+  <div class="qp-header">
+    <div class="qp-header-top">
+      <!-- Logo corporativo -->
+      <img src="assets/ZZ-2.png" alt="Logo QuazzarPro" class="qp-logo" />
+
+      <!-- Bloque derecha: nombre empresa + usuario + logout -->
+      <div class="qp-company-info">
+        <h2 class="qp-company">QuaZZar Technologies S.L.</h2>
+
+        <div class="qp-login-info">
+          <!-- Icono usuario -->
+          <img src="assets/user.png" class="qp-user-icon" alt="" />
+          <!-- Nombre de usuario (señal Angular) -->
+          <span class="qp-username">{{ userName() }}</span>
+          <!-- Botón de cierre de sesión -->
+          <button class="qp-logout-btn" (click)="logout()">Cerrar sesión</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Separador azul a ancho completo -->
+    <div class="qp-divider"></div>
+  </div>
+
+  <!-- =========================================================
+       LAYOUT PRINCIPAL
+       ========================================================= -->
+  <div class="qp-layout">
+    <main class="qp-main">
+
+      <!-- Título + botón volver -->
+      <div class="qp-header-row">
+        <h2 class="qp-title">Tareas pendientes</h2>
+        <button class="qp-back-btn" (click)="volverHome()">⬅ Volver a tareas</button>
+      </div>
+
+      <!-- =====================================================
+           RESUMEN/ESTADO (cargando / error / sin datos / conteo)
+           aria-live="polite" para que lectores de pantalla
+           anuncien cambios sin interrumpir al usuario.
+           ===================================================== -->
+      <section class="qp-pending-summary" aria-live="polite">
+        <!-- Mensaje de carga -->
+        <p *ngIf="loading()">Cargando tus pendientes…</p>
+
+        <!-- Mensaje de error (si la API falló) -->
+        <p *ngIf="!loading() && errorMsg()">{{ errorMsg() }}</p>
+
+        <!-- Mensaje "sin datos" -->
+        <p *ngIf="!loading() && !errorMsg() && rows().length === 0">
+          No tienes tareas pendientes.
+        </p>
+
+        <!-- Conteo de pendientes (visible solo si hay filas) -->
+        <p *ngIf="!loading() && !errorMsg() && rows().length > 0">
+          Tareas pendientes <strong>{{ rows().length }}</strong>
+        </p>
+      </section>
+
+      <!-- =====================================================
+           LISTADO DE PENDIENTES
+           - Solo se pinta cuando no hay carga ni error y hay datos.
+           - Cada item usa el VM (PendingVM) ya mapeado en el TS.
+           ===================================================== -->
+      <section class="qp-pending-list" *ngIf="!loading() && !errorMsg() && rows().length > 0">
+        <!-- Tarjeta por pendiente -->
+        <article class="qp-pending-card" *ngFor="let r of rows()">
+          <!-- Título: área + fecha (si viene) -->
+          <h3 class="qp-pending-card-title">
+            {{ r.area }}
+            <!-- Formateo de fecha con date pipe -->
+            <small *ngIf="r.fecha">
+              • iniciada: {{ r.fecha | date:'yyyy-MM-dd' }}
+            </small>
+          </h3>
+
+          <!-- Bloque de atributos/acciones -->
+          <ul class="qp-pending-tasks">
+            <!-- Progreso y botón para retomar -->
+            <li class="qp-pending-task">
+              <span class="qp-pending-label">
+                <b>Progreso:</b> {{ r.done }}/{{ r.total }} ({{ progresoLabel(r) }})
+              </span>
+
+              <!-- Acción principal: Retomar (guarda snapshot y navega) -->
+              <!-- Nota: añadimos la clase base 'qp-btn' + variante 'qp-btn--ghost' -->
+              <div class="qp-pending-actions">
+                <button class="qp-btn qp-btn--ghost" (click)="retomar(r)">Retomar</button>
+              </div>
+            </li>
+
+            <!-- VIN/Bastidor (si aplica al área) -->
+            <li class="qp-pending-task" *ngIf="r.bastidor">
+              <span class="qp-pending-label"><b>Bastidor:</b> {{ r.bastidor }}</span>
+            </li>
+
+            <!-- Color (si aplica) -->
+            <li class="qp-pending-task" *ngIf="r.color">
+              <span class="qp-pending-label"><b>Color:</b> {{ r.color }}</span>
+            </li>
+          </ul>
+        </article>
+      </section>
+
+    </main>
+  </div>
+</div>

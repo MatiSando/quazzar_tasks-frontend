@@ -1,0 +1,321 @@
+:root {
+  --qp-bg: #cae6fc;
+  --qp-text: #1f2937;
+  --qp-accent: #1D71B8;
+  --qp-success: #22c55e;
+  --qp-border: #e8e8ef;
+}
+
+/* Reutiliza tu sistema */
+.qp-container {
+  background: var(--qp-bg);
+  min-height: 100vh;
+  padding: 0 16px 24px;
+  font-family: Montserrat, sans-serif;
+}
+
+.qp-header {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.qp-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.qp-logo {
+  max-width: 130px;
+  height: auto;
+  object-fit: contain;
+}
+
+.qp-company {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--qp-text);
+  margin: 0;
+}
+
+/* Línea azul */
+.qp-divider {
+  position: relative;
+  left: 50%;
+  right: 50%;
+  width: 100vw;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  height: 12px;
+  background: linear-gradient(45deg, #1d72b8, #0BBBEF);
+}
+
+
+.qp-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.qp-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--qp-text);
+  margin: 0;
+}
+
+.qp-back-btn {
+  background: #fff;
+  color: #1D71B8;
+  border: 2px solid #1D71B8;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.qp-back-btn:hover {
+  background: #1D71B8;
+  color: #fff;
+}
+
+/* Card centrada */
+.auth-card {
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.qp-card {
+  background: #fff;
+  border: 2px solid #d6d9dd;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, .08);
+  padding: 16px;
+}
+
+.qp-card__header {
+  border-bottom: 1px solid #e3e6ec;
+  padding-bottom: 6px;
+  margin-bottom: 12px;
+}
+
+.qp-card__title {
+  font-size: 20px;
+  margin: 0;
+}
+
+/* Form */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.vf-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+}
+
+.vf-label {
+  font-weight: 600;
+  color: var(--qp-text);
+}
+
+.vf-input {
+  width: 80%;
+  padding: 10px 12px;
+  border: 1px solid #cfd6e0;
+  border-radius: 8px;
+  font-size: 14px;
+  background: #fff;
+}
+
+.vf-input:focus {
+  outline: none;
+  border-color: #1D71B8;
+  box-shadow: 0 0 0 3px rgba(29, 113, 184, .15);
+}
+
+.vf-hint {
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: -4px;
+}
+
+.vf-hint.is-ok {
+  color: #15803d;
+  font-weight: 600;
+}
+
+/* Password row */
+.password-row {
+  position: relative;
+  display: flex;
+  gap: 8px;
+}
+
+.password-row .toggle-pass {
+  white-space: nowrap;
+  border: 1px solid #cfd6e0;
+  border-radius: 8px;
+  background: #fff;
+  padding: 0 10px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.password-row .toggle-pass:hover {
+  background: #f2f5f9;
+}
+
+
+
+/* Error general */
+.form-error {
+  background: #fde8e8;
+  color: #b42318;
+  border: 1px solid #f5c2c0;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+/* Botón enviar */
+.qp-btn {
+  cursor: pointer;
+  border-radius: 10px;
+  border: 1px solid var(--qp-border);
+  padding: 10px 12px;
+  font-size: 14px;
+  transition: .2s;
+}
+
+.qp-btn--primary {
+  background: #1D71B8;
+  color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 3px 8px rgba(37, 99, 235, .4);
+}
+
+.qp-btn--primary:hover {
+  transform: translateY(-1px);
+}
+
+.qp-btn--primary:disabled {
+  opacity: .6;
+  cursor: not-allowed;
+  color: #000;
+}
+
+.submit-btn {
+  width: 100%;
+}
+
+/* ===== Modal cambio de contraseña (login) ===== */
+
+.change-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+}
+
+.change-modal {
+  width: 100%;
+  max-width: 420px;
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid var(--qp-border);
+  box-shadow: 0 18px 60px rgba(0, 0, 0, .25);
+  padding: 18px 16px 16px;
+}
+
+.change-modal__title {
+  margin: 0 0 8px;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.change-modal__text {
+  margin: 0 0 16px;
+  font-size: 14px;
+  color: #475569;
+}
+
+.change-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.change-modal__footer {
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+
+/* ===== Splash de login (logo al iniciar sesión) ===== */
+
+.splash-backdrop {
+  position: fixed;
+  inset: 0;
+  background: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 99999;
+  animation: splashFade 1.8s ease forwards;
+  pointer-events: none;
+}
+
+/* Capa exterior: caída desde arriba + zoom */
+.splash-scale {
+  animation: dropIn 1.4s ease-out forwards;
+  will-change: transform;
+}
+
+/* Imagen: rotación + brillo */
+.splash-logo {
+  width: 260px;
+  height: auto;
+  opacity: 0;
+  filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.6));
+  animation:
+    fadeOnly 0.4s ease forwards,
+    spinZoom 1.2s linear forwards;
+  will-change: transform, opacity;
+}
+
+/* Caída desde arriba */
+@keyframes dropIn {
+  0%   { transform: translateY(-250px) scale(0.8); opacity: 0; }
+  70%  { transform: translateY(10px) scale(1.2); opacity: 1; }
+  100% { transform: translateY(0) scale(1); }
+}
+
+/* Giro + agrandamiento */
+@keyframes spinZoom {
+  0%   { transform: rotate(0deg) scale(1); }
+  100% { transform: rotate(360deg) scale(3); }
+}
+
+/* Solo opacidad */
+@keyframes fadeOnly { from{opacity:0;} to{opacity:1;} }
+
+/* Desvanecimiento final */
+@keyframes splashFade {
+  0%,80%{opacity:1;}
+  100%{opacity:0;}
+}

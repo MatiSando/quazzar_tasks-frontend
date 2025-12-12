@@ -1,0 +1,282 @@
+<div class="qp-container">
+  <!-- ===== CABECERA ===== -->
+  <div class="qp-header">
+
+    <div class="qp-header-top">
+      <!-- Logo corporativo -->
+      <img src="assets/ZZ-2.png" alt="Logo QuazzarPro" class="qp-logo" />
+
+      <!-- Info de empresa + usuario -->
+      <div class="qp-company-info">
+        <h2 class="qp-company">QuaZZar Technologies S.L.</h2>
+
+        <!-- Bloque de sesión -->
+        <div class="qp-login-info">
+          <img src="assets/user.png" class="qp-user-icon" alt="Usuario" />
+          <!-- userName() lo setea el componente en ngOnInit -->
+          <span class="qp-username">{{ userName() }}</span>
+
+          <!-- Botón Logout con role y label accesibles -->
+          <button
+            type="button"
+            class="qp-logout-btn"
+            (click)="logout()"
+            aria-label="Cerrar sesión">
+            Cerrar sesión
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Separador corporativo -->
+    <div class="qp-divider"></div>
+
+    <!-- Título + volver -->
+    <div class="qp-header-row">
+      <h2 class="qp-title">Premontaje</h2>
+
+      <!-- goHome() muestra modal de guardar si procede -->
+      <button
+        type="button"
+        (click)="goHome()"
+        class="qp-back-btn"
+        aria-label="Volver a tareas">
+        ⬅ Volver a tareas
+      </button>
+    </div>
+
+    <!-- Acciones globales superiores -->
+    <div class="qp-top-actions">
+      <!-- Limpia tareas + color; NO borra contador diario -->
+      <button
+        type="button"
+        class="qp-btn qp-btn--ghost"
+        (click)="clearAll()">
+        Limpiar todo
+      </button>
+
+      <!-- Habilitado sólo si allComplete() === true -->
+      <button
+        type="button"
+        class="qp-btn qp-btn--primary"
+        [disabled]="!allComplete()"
+        (click)="finish()"
+        aria-disabled="{{ !allComplete() }}">
+        Terminar
+      </button>
+
+      <!-- Contador del día (desde localStorage con key por usuario/fecha/módulo) -->
+      <span class="qp-badge">
+        Tareas finalizadas hoy: {{ dailyCount() }}
+      </span>
+    </div>
+
+  </div>
+
+  <!-- ===== CARD: Datos del vehículo (sólo Color en Premontaje) ===== -->
+  <section class="qp-card vehicle-card" aria-labelledby="vehiculo-title">
+    <header class="qp-card__header">
+      <h3 id="vehiculo-title" class="qp-card__title">Color</h3>
+
+      <!-- Limpia únicamente el color (clearVehicle()) -->
+      <button
+        type="button"
+        class="qp-btn qp-btn--ghost"
+        (click)="clearVehicle()">
+        Limpiar
+      </button>
+    </header>
+
+    <div class="vehicle-form">
+      <!-- Campo: Color -->
+      <div class="vf-field">
+        <!-- Fila de selector de color (puedes reactivar la vista previa si quieres) -->
+        <div class="vf-color-row">
+          <!--
+            Vista previa del color (opcional):
+            <div class="vf-color-preview"
+                 [style.background]="vehicleColorHex()"
+                 [class.is-empty]="!vehicleColorHex()"></div>
+          -->
+
+          <!-- Select vinculado a signals vehicleColorHex()/setColor() -->
+          <select
+            class="vf-select"
+            [ngModel]="vehicleColorHex()"
+            (ngModelChange)="setColor($event)"
+            aria-label="Seleccionar color"
+            required>
+            <option [ngValue]="''" disabled>Selecciona un color…</option>
+            <!-- colorOptions viene de Pintura (únicos, capitalizados) -->
+            <option *ngFor="let c of colorOptions" [ngValue]="c.value">
+              {{ c.label }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <!--
+        Bastidor NO se usa en Premontaje, por eso lo dejamos comentado.
+        Si en el futuro quisieras habilitar VIN aquí, reactiva este bloque
+        y añade la lógica TS correspondiente:
+
+      <div class="vf-field">
+        <label class="vf-label">Bastidor</label>
+        <input
+          #vin
+          class="vf-input"
+          type="text"
+          [value]="bastidor()"
+          (input)="onBastidorInput(vin.value)"
+          placeholder="Introduce bastidor (mín. 17 caracteres)" />
+      </div>
+      -->
+    </div>
+  </section>
+
+  <!-- ===== GRID DE SECCIONES / TAREAS ===== -->
+  <div class="qp-grid">
+    <!-- Recorremos secciones ya agrupadas/ordenadas desde BD -->
+    <section
+      class="qp-card"
+      *ngFor="let sec of sections(); let si = index"
+      [attr.aria-labelledby]="'sec-title-' + si">
+      <div class="qp-card__content">
+        <header class="qp-card__header">
+          <!-- Título de sección -->
+          <h3 class="qp-card__title" [id]="'sec-title-' + si">{{ sec.name }}</h3>
+        </header>
+
+        <!-- Barra de progreso de la sección -->
+        <div class="qp-progress" aria-label="Progreso de la sección">
+          <div
+            class="qp-progress__bar"
+            [style.width.%]="progress(sec)"></div>
+          <span class="qp-progress__label">
+            {{ progress(sec) }}%
+          </span>
+        </div>
+
+        <!-- Botonera de tareas de la sección -->
+        <div class="qp-tasks">
+          <button
+            type="button"
+            class="qp-btn qp-btn--task"
+            [class.is-done]="t.done"
+            (click)="toggleTask(si, ti)"
+            *ngFor="let t of sec.tasks; let ti = index"
+            [attr.aria-pressed]="t.done"
+            [attr.aria-label]="t.done ? (t.label + ' marcada') : (t.label + ' sin marcar')">
+            {{ t.label }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Footer de la card: limpiar sólo esta sección -->
+      <div class="qp-card__footer">
+        <button
+          type="button"
+          class="qp-btn qp-btn--ghost"
+          (click)="clearSection(si)">
+          Limpiar
+        </button>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- ===== MODAL: Confirmación de finalización ===== -->
+<div
+  class="qp-modal-backdrop"
+  *ngIf="showModal()"
+  (click)="onBackdropClick($event)">
+  <div class="qp-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="qp-modal__header">
+      <h3 id="modal-title" class="qp-modal__title">¡Tareas completadas!</h3>
+      <img src="assets/ZZ-velado.png" alt="Éxito" class="qp-modal__img" />
+    </div>
+
+    <div class="qp-modal__body">
+      <p>Has finalizado todas las tareas de premontaje.</p>
+      <p>Puedes editar o finalizar si quieres comenzar un nuevo premontaje.</p>
+    </div>
+
+    <!-- Info opcional (color / VIN) y gif -->
+    <div class="qp-modal__info-row">
+      <div class="qp-modal__info">
+        <!-- Si quieres mostrar el color seleccionado:
+        <p><strong>Color:</strong>
+          <span class="modal-color-dot" [style.background]="vehicleColorHex()"></span>
+          {{ vehicleColorName() || '—' }}
+        </p>
+        -->
+      </div>
+
+      <img src="assets/moto.gif" alt="Animación de moto" class="qp-modal__gif" />
+    </div>
+
+    <div class="qp-modal__footer">
+      <!-- Cierra modal para seguir editando -->
+      <button type="button" class="qp-btn qp-btn--primary" (click)="closeModal()">Editar</button>
+
+      <!-- Dispara flujo iniciar/actualizar → finalizar + contador -->
+      <button
+        type="button"
+        class="qp-btn qp-btn--primary"
+        (click)="continueAndClear()">
+        Finalizar &gt;&gt;
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL: Guardar progreso al salir ===== -->
+<div
+  class="qp-modal-backdrop"
+  *ngIf="showLeaveModal()"
+  (click)="cancelLeave()">
+  <div
+    class="qp-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="leave-modal-title"
+    (click)="$event.stopPropagation()">
+
+    <div class="qp-modal__header">
+      <h3 id="leave-modal-title" class="qp-modal__title">¿Guardar progreso antes de salir?</h3>
+      <img src="assets/ZZ-velado.png" alt="Información" class="qp-modal__img" />
+    </div>
+
+    <div class="qp-modal__body">
+      <!-- Texto adaptado a Premontaje -->
+      <p>Tienes cambios sin finalizar en <strong>Premontaje</strong>.</p>
+      <p>Si guardas, quedarán como <strong>pendientes</strong> en la base de datos.</p>
+    </div>
+
+    <div class="qp-modal__footer">
+      <!-- Sale sin persistir (limpia estado local) -->
+      <button
+        type="button"
+        class="qp-btn qp-btn--primary"
+        (click)="confirmLeaveWithoutSaving()">
+        Salir sin guardar
+      </button>
+
+      <!-- Upsert de pendiente (por id si existe, si no crear) y luego navega -->
+      <button
+        type="button"
+        class="qp-btn qp-btn--primary"
+        (click)="confirmSaveAndLeave()">
+        Guardar y salir
+      </button>
+
+      <!-- Cancela el modal -->
+      <button
+        type="button"
+        class="qp-btn qp-btn--primary"
+        (click)="cancelLeave()">
+        Cancelar
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,151 @@
+:root {
+  --qp-bg: #cae6fc;
+}
+
+/* === CONTENEDOR PRINCIPAL === */
+.qp-container{
+  background: var(--qp-bg);
+  min-height: 100vh;
+  padding: 0 16px 24px;
+  font-family: Montserrat, sans-serif;
+}
+
+/* === HEADER CON LOGO === */
+.qp-header {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+/* Parte superior: logo a la izquierda, texto a la derecha */
+.qp-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+/* Logo */
+.qp-logo {
+  max-width: 130px;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Nombre de empresa alineado a la derecha */
+.qp-company {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+/*usuario*/
+.qp-login-info {
+  margin-left: auto;
+  margin-right: 20px;
+  font-size: 14px;
+  color: var(--qp-text);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.qp-user-icon {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+/*Boton Logout*/
+.qp-logout-btn {
+  background: transparent;
+  color: #1D71B8;
+  border: 2px solid #1D71B8;
+  padding: 6px 14px;
+  border-radius: 3px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: auto;
+  margin-top: 6px;
+  transition: .2s;
+}
+
+.qp-logout-btn:hover {
+  background: #1D71B8;
+  color: white;
+}
+
+
+/* Línea azul */
+.qp-divider {
+  position: relative;
+  left: 50%;
+  right: 50%;
+  width: 100vw;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  height: 12px;
+  background: linear-gradient(45deg, #1d72b8, #0BBBEF);
+}
+
+
+/* Título */
+.qp-title {
+  font-size: 26px;
+  color: #1f2937;
+  margin: 40px 0 0;
+  text-align: left;
+}
+
+/* === GRID DE BOTONES === */
+.home-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+
+}
+
+/* === BOTÓN === */
+.home-btn {
+  background: linear-gradient(45deg, #1d72b8, #0BBBEF);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
+  height: 130px;
+  padding: 16px 24px;
+  font-size: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+  margin: 0;
+  min-width: 0;
+  margin-top: 20px;
+}
+
+.home-btn:hover {
+  background: #14548a;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,.12);
+}
+
+/* Icono dentro del botón */
+.home-btn__icon {
+  width: 56px;
+  height: auto;
+  object-fit: contain;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 900px) {
+  .home-buttons { grid-template-columns: 1fr; }
+  .home-btn { height: 120px; font-size: 26px; }
+  .home-btn__icon { width: 48px; }
+}

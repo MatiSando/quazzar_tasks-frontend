@@ -1,0 +1,192 @@
+<div class="qp-container">
+  <!-- ===== CABECERA (logo, empresa, usuario) ===== -->
+  <div class="qp-header">
+    <div class="qp-header-top">
+      <img src="assets/ZZ-2.png" alt="Logo QuazzarPro" class="qp-logo" />
+      <div class="qp-company-info">
+        <h2 class="qp-company">QuaZZar Technologies S.L.</h2>
+        <div class="qp-login-info">
+          <img src="assets/user.png" class="qp-user-icon" />
+          <span class="qp-username">{{ userName() }}</span>
+          <button class="qp-logout-btn" (click)="logout()">Cerrar sesión</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Franja corporativa azul -->
+    <div class="qp-divider"></div>
+
+    <!-- Título de la página + botón volver -->
+    <div class="qp-header-row">
+      <h2 class="qp-title">Montaje</h2>
+      <button (click)="goHome()" class="qp-back-btn">⬅ Volver a tareas</button>
+    </div>
+
+    <!-- Acciones superiores: limpiar todo / terminar / contador -->
+    <div class="qp-top-actions">
+      <button type="button" class="qp-btn qp-btn--ghost" (click)="clearAll()">Limpiar todo</button>
+      <button class="qp-btn qp-btn--primary" [disabled]="!canFinish()" (click)="finish()">Terminar</button>
+      <span class="qp-badge">Tareas finalizadas hoy: {{ dailyCount() }}</span>
+    </div>
+  </div>
+
+  <!-- ===== CARD: Datos del vehículo (color + VIN) ===== -->
+  <section class="qp-card vehicle-card">
+    <!-- Cabecera de la card con botón limpiar SOLO vehículo -->
+    <header class="qp-card__header">
+      <h3 class="qp-card__title">Datos de la Moto</h3>
+      <button type="button" class="qp-btn qp-btn--ghost" (click)="clearVehicle()">Limpiar</button>
+    </header>
+
+    <!-- Formulario de vehículo -->
+    <div class="vehicle-form">
+      <!-- Selector de color (opciones vienen de colorOptions()) -->
+      <div class="vf-field">
+        <label class="vf-label">Color</label>
+        <select class="vf-select" [ngModel]="vehicleColorHex()" (ngModelChange)="setColor($event)">
+          <option [ngValue]="''" disabled>Selecciona un color…</option>
+          <option *ngFor="let c of colorOptions()" [ngValue]="c.value">
+            {{ c.label }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Campo Bastidor con datalist y chips de estado -->
+      <div class="vf-field">
+        <label class="vf-label">Bastidor</label>
+
+        <!-- Input escribible + estados (checking/ok/dup/notfound/invalid) -->
+        <div class="vin-field">
+          <input
+            class="vf-input"
+            placeholder="Escribe o selecciona un bastidor…"
+            [ngModel]="vinQuery()"
+            (ngModelChange)="onVinInput($event)"
+            list="vinList"
+            maxlength="17"
+            [attr.aria-invalid]="vinStatus() === 'dup' || vinStatus() === 'notfound' || vinStatus() === 'invalid' ? true : null" />
+
+          <!-- Chip de feedback en tiempo real -->
+          <span class="vin-chip" *ngIf="vinStatus() !== 'idle' && vinStatus() !== 'typing'">
+            <ng-container [ngSwitch]="vinStatus()">
+              <span *ngSwitchCase="'checking'" class="vin-chip--checking">Comprobando…</span>
+              <span *ngSwitchCase="'ok'" class="vin-chip--ok">Bastidor Disponible</span>
+              <span *ngSwitchCase="'dup'" class="vin-chip--dup">Bastidor Duplicado</span>
+              <span *ngSwitchCase="'notfound'" class="vin-chip--invalid">EL Bastido no está en BD</span>
+              <span *ngSwitchCase="'invalid'" class="vin-chip--invalid">Bastidor Inválido</span>
+            </ng-container>
+          </span>
+        </div>
+
+        <!-- Lista de sugerencias para el VIN (datalist HTML nativo) -->
+        <datalist id="vinList">
+          <option *ngFor="let vin of bastidorFiltered()" [value]="vin"></option>
+        </datalist>
+
+        <!-- Ayudas contextuales según estado del VIN -->
+        <small class="vin-help" *ngIf="vinStatus() === 'notfound'">
+          El bastidor debe existir en la base de datos de <b>Chasis</b>.
+        </small>
+        <small class="vin-help" *ngIf="vinStatus() === 'dup'">
+          Este bastidor ya fue usado en una tarea <b>finalizada</b> de Montaje.
+        </small>
+        <!--
+        <small class="vin-help" *ngIf="vinStatus() === 'invalid'">
+          Debe tener 17 caracteres válidos (A–Z, 0–9;).
+        </small>
+        -->
+        <!-- <small style="opacity: 0.7">VIN cargados: {{ bastidorOptions().length }}</small> -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== GRID DE SECCIONES (cada sección con su progreso y tareas) ===== -->
+  <div class="qp-grid">
+    <section class="qp-card" *ngFor="let sec of sections(); let si = index">
+      <div class="qp-card__content">
+        <!-- Título de sección -->
+        <header class="qp-card__header">
+          <h3 class="qp-card__title">{{ sec.name }}</h3>
+        </header>
+
+        <!-- Barra de progreso de la sección -->
+        <div class="qp-progress">
+          <div class="qp-progress__bar" [style.width.%]="progress(sec)"></div>
+          <span class="qp-progress__label">{{ progress(sec) }}%</span>
+        </div>
+
+        <!-- Botonera de tareas de la sección (toggle done) -->
+        <div class="qp-tasks">
+          <button
+            type="button"
+            class="qp-btn qp-btn--task"
+            [class.is-done]="t.done"
+            (click)="toggleTask(si, ti)"
+            *ngFor="let t of sec.tasks; let ti = index">
+            {{ t.label }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Acciones de sección: limpiar solo esta sección -->
+      <div class="qp-card__footer">
+        <button type="button" class="qp-btn qp-btn--ghost" (click)="clearSection(si)">Limpiar</button>
+      </div>
+    </section>
+  </div>
+</div>
+
+
+<!-- ===== MODAL FINALIZAR (aparece cuando canFinish() y pulsa “Terminar”) ===== -->
+<div class="qp-modal-backdrop" *ngIf="showModal()" (click)="onBackdropClick($event)">
+  <div class="qp-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="qp-modal__header">
+      <h3 id="modal-title" class="qp-modal__title">¡Tareas completadas!</h3>
+      <img src="assets/ZZ-velado.png" alt="Icono éxito" class="qp-modal__img" />
+    </div>
+
+    <div class="qp-modal__body">
+      <p>Has finalizado todas las tareas de montaje.</p>
+      <p>Puedes editar o finalizar si quieres comenzar un nuevo montaje.</p>
+    </div>
+
+    <!-- Zona informativa / GIF (solo decorativa) -->
+    <div class="qp-modal__info-row">
+      <!--
+      <div class="qp-modal__info">
+        <p><strong>Color: </strong> <span class="modal-color-dot" [style.background]="vehicleColorHex()"></span> {{ vehicleColorName() || '—' }}</p>
+        <p><strong>Bastidor:</strong> {{ bastidor() || '—' }}</p>
+      </div>
+      -->
+      <img src="assets/moto.gif" alt="moto" class="qp-modal__gif" />
+    </div>
+
+    <!-- Acciones del modal: cerrar para seguir editando o finalizar -->
+    <div class="qp-modal__footer">
+      <button type="button" class="qp-btn qp-btn--primary" (click)="closeModal()">Editar</button>
+      <button class="qp-btn qp-btn--primary" [disabled]="!canFinish()" (click)="continueAndClear()">Finalizar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL “GUARDAR Y SALIR” (aparece al intentar salir con progreso) ===== -->
+<div class="qp-modal-backdrop" *ngIf="showLeaveModal()" (click)="cancelLeave()">
+  <div class="qp-modal" role="dialog" aria-modal="true" aria-labelledby="leave-modal-title" (click)="$event.stopPropagation()">
+    <div class="qp-modal__header">
+      <h3 id="leave-modal-title" class="qp-modal__title">¿Guardar progreso antes de salir?</h3>
+      <img src="assets/ZZ-2.png" alt="" class="qp-modal__img" />
+    </div>
+
+    <div class="qp-modal__body">
+      <p>Tienes cambios sin finalizar en <strong>Montaje</strong>.</p>
+      <p>Si guardas, quedarán como <strong>pendientes</strong> en la base de datos.</p>
+    </div>
+
+    <!-- Botonera del modal de salida -->
+    <div class="qp-modal__footer">
+      <button type="button" class="qp-btn qp-btn--primary" (click)="confirmLeaveWithoutSaving()">Salir sin guardar</button>
+      <button type="button" class="qp-btn qp-btn--primary" (click)="confirmSaveAndLeave()">Guardar y salir</button>
+      <button type="button" class="qp-btn qp-btn--primary" (click)="cancelLeave()">Cancelar</button>
+    </div>
+  </div>
+</div>

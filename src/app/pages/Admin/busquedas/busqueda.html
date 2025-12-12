@@ -1,0 +1,238 @@
+<!-- ==========================================================
+     BÚSQUEDAS AVANZADAS — Plantilla HTML (Angular)
+     ----------------------------------------------------------
+     Vista que muestra los filtros, la tabla de resultados
+     y la paginación para consultar el historial de tareas.
+     Autor: Matías Sandoval — QuazzarPro Tasks
+     ========================================================== -->
+
+<div class="qp-container">
+
+  <!-- ===== CABECERA ===================================================== -->
+  <div class="qp-header">
+    <div class="qp-header-top">
+      <!-- Botón hamburguesa (abre el menú lateral en pantallas pequeñas) -->
+      <button type="button" class="qp-hamburger" (click)="toggleSidenav()" aria-label="Abrir menú">☰</button>
+
+      <!-- Logo de la empresa -->
+      <img src="assets/ZZ-2.png" alt="Logo QuazzarPro" class="qp-logo" />
+
+      <!-- Información de empresa y usuario actual -->
+      <div class="qp-company-info">
+        <h2 class="qp-company">QuaZZar Technologies S.L.</h2>
+        <div class="qp-login-info">
+          <img src="assets/user.png" class="qp-user-icon" />
+          <span class="qp-username">{{ userName() }}</span>
+          <button class="qp-logout-btn" (click)="logout()">Cerrar sesión</button>
+        </div>
+      </div>
+    </div>
+    <div class="qp-divider"></div>
+  </div>
+
+  <!-- ===== LAYOUT GENERAL ============================================== -->
+  <div class="qp-layout">
+
+    <!-- ===== MENÚ LATERAL (navegación principal) ====================== -->
+    <aside class="qp-sidenav">
+      <nav>
+        <!-- Enlace al módulo de gestión de usuarios -->
+        <a class="qp-nav-item" [routerLink]="['/gestion-usuarios']">
+          <span class="qp-nav-ico"></span><span>Usuarios</span>
+        </a>
+
+        <!-- Enlace al módulo de gestión de tareas -->
+        <a class="qp-nav-item" [routerLink]="['/gestion-tareas']">
+          <span class="qp-nav-ico"></span><span>Tareas</span>
+        </a>
+
+        <!-- Enlace activo: módulo actual -->
+        <a class="qp-nav-item is-active">
+          <span class="qp-nav-ico"></span><span>Búsquedas Avanzadas</span>
+        </a>
+      </nav>
+    </aside>
+
+    <!-- ===== CONTENIDO PRINCIPAL ====================================== -->
+    <main class="qp-main">
+      <div class="qp-header-row">
+        <h2 class="qp-title">Búsquedas</h2>
+      </div>
+
+      <!-- ===== FILTROS DE BÚSQUEDA ==================================== -->
+      <section class="bs-card">
+        <div class="filters-grid">
+          <!-- Filtro por rango de fechas -->
+          <label class="field">
+            <span class="label">Fecha (desde / hasta)</span>
+            <div class="date-range">
+              <input type="date" class="qp-text-input" [formControl]="f_fechaDesde" />
+              <input type="date" class="qp-text-input" [formControl]="f_fechaHasta" />
+            </div>
+          </label>
+
+          <!-- Filtro por nombre del trabajador -->
+          <label class="field">
+            <span class="label">Trabajador</span>
+            <input type="text" class="qp-text-input" [formControl]="f_trabajador"
+                   placeholder="Escribe el nombre del trabajador…" />
+          </label>
+
+          <!-- Filtro por área o tipo de tarea -->
+          <label class="field">
+            <span class="label">Tarea</span>
+            <select class="qp-text-input" [formControl]="f_area">
+              <option value="">Todas</option>
+              <option *ngFor="let a of areas" [value]="a">{{ a }}</option>
+            </select>
+          </label>
+
+          <!-- Botón para limpiar todos los filtros -->
+          <div class="filter-actions">
+            <button type="button" class="qp-btn qp-btn--primary" (click)="clearFilters()">
+              Limpiar filtros
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== TABLA DE RESULTADOS ===================================== -->
+      <section class="bs-card">
+
+        <!-- Encabezado de la tabla con columnas ordenables -->
+        <div class="bs-head-row">
+          <!-- Columna: Fecha inicio -->
+          <div class="bs-col" role="button" tabindex="0" (click)="sortBy('fecha')">
+            Fecha inicio
+            <span class="sort-arrow" [class.active]="sortKey() === 'fecha'">
+              {{ sortKey() === 'fecha' ? (sortDir() === 'asc' ? '▲' : '▼') : '▲' }}
+            </span>
+          </div>
+
+          <!-- Columna: Fecha fin -->
+          <div class="bs-col" role="button" tabindex="0" (click)="sortBy('fecha_fin')">
+            Fecha fin
+            <span class="sort-arrow" [class.active]="sortKey() === 'fecha_fin'">
+              {{ sortKey() === 'fecha_fin' ? (sortDir() === 'asc' ? '▲' : '▼') : '▲' }}
+            </span>
+          </div>
+
+          <!-- Columna: Trabajador -->
+          <div class="bs-col" role="button" tabindex="0" (click)="sortBy('trabajador')">
+            Trabajador
+            <span class="sort-arrow" [class.active]="sortKey() === 'trabajador'">
+              {{ sortKey() === 'trabajador' ? (sortDir() === 'asc' ? '▲' : '▼') : '▲' }}
+            </span>
+          </div>
+
+          <!-- Columna: Tarea / área -->
+          <div class="bs-col" role="button" tabindex="0" (click)="sortBy('area')">
+            Tarea
+            <span class="sort-arrow" [class.active]="sortKey() === 'area'">
+              {{ sortKey() === 'area' ? (sortDir() === 'asc' ? '▲' : '▼') : '▲' }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Cuerpo de la tabla (filas paginadas) -->
+        <div class="bs-body">
+          <!-- Fila individual con selección -->
+          <div class="bs-row" *ngFor="let r of paginatedRows(); trackBy: trackById"
+               [class.is-selected]="r.id === selectedId()" (click)="selectRow(r.id)">
+            <div class="bs-cell" data-label="Fecha">{{ r.fecha }}</div>
+
+            <!-- Fecha fin: muestra “Pendiente” cuando no existe -->
+            <div class="bs-cell" data-label="Fin"
+                 [ngClass]="{ 'pendiente': r.fecha_fin === 'Pendiente' }">
+              {{ r.fecha_fin || 'Pendiente' }}
+            </div>
+
+            <!-- Columna: trabajador -->
+            <div class="bs-cell" data-label="Trabajador">{{ r.trabajador }}</div>
+
+            <!-- Columna: área -->
+            <div class="bs-cell" data-label="Área">{{ r.area }}</div>
+          </div>
+
+          <!-- Mensaje cuando no hay resultados -->
+          <div class="bs-empty" *ngIf="paginatedRows().length === 0">
+            No hay resultados con los filtros actuales.
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== PIE DE TABLA (contador y paginación) ===================== -->
+      <div class="bs-footer">
+        <!-- Contador de registros mostrados -->
+        <div class="bs-counter">
+          Mostrando
+          <strong>{{ (currentPage()-1)*pageSize + (paginatedRows().length ? 1 : 0) }}</strong> –
+          <strong>{{ (currentPage()-1)*pageSize + paginatedRows().length }}</strong>
+          de <strong>{{ totalFiltrados() }}</strong> registro{{ totalFiltrados() === 1 ? '' : 's' }}
+        </div>
+
+        <!-- Componente de paginación con elipsis -->
+        <nav class="bs-pagination" aria-label="Paginación">
+
+          <!-- Botón: página anterior -->
+          <button
+            class="page-btn prev qp-btn"
+            [disabled]="currentPage() === 1"
+            (click)="prevPage()"
+            aria-label="Página anterior">
+            ⬅ <span class="label">Anterior</span>
+          </button>
+
+          <!-- Números de página y elipsis -->
+          <ul class="page-list" role="list">
+            <li *ngFor="let p of pageItems()">
+              <!-- Si no es elipsis, renderiza botón -->
+              <ng-container *ngIf="p !== '…'; else ellipsisTpl">
+                <button
+                  class="page-btn qp-btn"
+                  [class.is-active]="p === currentPage()"
+                  (click)="goToPage(+p)"
+                  [attr.aria-current]="p === currentPage() ? 'page' : null"
+                  [attr.aria-label]="'Ir a la página ' + p">
+                  {{ p }}
+                </button>
+              </ng-container>
+              <!-- Si es elipsis, muestra texto no interactivo -->
+              <ng-template #ellipsisTpl>
+                <span class="page-ellipsis" aria-hidden="true">…</span>
+              </ng-template>
+            </li>
+          </ul>
+
+          <!-- Botón: página siguiente -->
+          <button
+            class="page-btn next qp-btn"
+            [disabled]="currentPage() === totalPages()"
+            (click)="nextPage()"
+            aria-label="Página siguiente">
+            <span class="label">Siguiente</span> ➡
+          </button>
+        </nav>
+
+        <!-- Indicador de página actual -->
+        <span class="bs-page-indicator">Página {{ currentPage() }} / {{ totalPages() }}</span>
+      </div>
+
+      <!-- ===== DRAWER MÓVIL ============================================ -->
+      <!-- Fondo oscuro al abrir el menú lateral -->
+      <div class="qp-drawer-backdrop" *ngIf="sidenavOpen()" (click)="closeSidenav()" aria-hidden="true"></div>
+
+      <!-- Drawer lateral para pantallas pequeñas -->
+      <aside class="qp-drawer" *ngIf="sidenavOpen()" role="dialog" aria-label="Menú lateral">
+        <div class="qp-drawer__head">
+          <strong class="qp-drawer__title">Menú</strong>
+        </div>
+        <nav class="qp-drawer__nav" (click)="closeSidenav()">
+          <a class="qp-nav-item" [routerLink]="['/gestion-usuarios']"><span>Usuarios</span></a>
+          <a class="qp-nav-item" [routerLink]="['/gestion-tareas']"><span>Tareas</span></a>
+          <a class="qp-nav-item is-active"><span>Búsquedas</span></a>
+        </nav>
+      </aside>
+    </main>
+  </div>
+</div>

@@ -1,0 +1,419 @@
+:root {
+  /* Paleta y tokens de diseño base */
+  --qp-bg: #cae6fc;
+  --qp-text: #1f2937;
+  --qp-accent: #1D71B8;
+  --qp-success: #22c55e;
+  --qp-border: #e8e8ef;
+}
+
+/* ===== Contenedor y cabecera ===== */
+.qp-container {
+  background: var(--qp-bg);
+  min-height: 100vh;
+  padding: 0 16px 24px;
+  font-family: Montserrat, sans-serif;
+}
+
+.qp-header {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.qp-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.qp-logo {
+  max-width: 130px;
+  height: auto;
+  object-fit: contain;
+}
+
+.qp-company {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--qp-text);
+  margin: 0;
+}
+
+/* ===== Bloque usuario / sesión ===== */
+.qp-login-info {
+  margin-left: auto;
+  margin-right: 20px;
+  font-size: 14px;
+  color: var(--qp-text);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.qp-user-icon {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+/* Botón de cerrar sesión (estilo corporativo azul) */
+.qp-logout-btn {
+  background: transparent;
+  color: #1D71B8;
+  border: 2px solid #1D71B8;
+  padding: 6px 14px;
+  border-radius: 3px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: auto;
+  margin-top: 6px;
+  transition: .2s;
+}
+.qp-logout-btn:hover {
+  background: #1D71B8;
+  color: white;
+}
+
+/* Separador azul horizontal (toma todo el ancho de la ventana) */
+.qp-divider {
+  position: relative;
+  left: 50%;
+  right: 50%;
+  width: 100vw;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  height: 12px;
+  background: linear-gradient(45deg, #1d72b8, #0BBBEF);
+}
+
+/* Título de pantalla + botón volver */
+.qp-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.qp-title {
+  font-size: 26px;
+  color: #1f2937;
+  margin-top: 5px;
+  text-align: left;
+  margin-bottom: 0;
+}
+
+/* Botón volver a lista de tareas */
+.qp-back-btn {
+  background: #ffffff;
+  color: #1D71B8;
+  border: 2px solid #1D71B8;
+  padding: 8px 16px;
+  border-radius: 3px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+  margin-top: 10px;
+}
+.qp-back-btn:hover {
+  background: #1D71B8;
+  color: #fff;
+}
+
+/* ===== Barra de progreso general ===== */
+.qp-progress {
+  position: relative;
+  width: 100%;
+  height: 18px;
+  background: #eef1f6;
+  border: 1px solid #4ADE80; /* borde verde para resaltar avance */
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+.qp-progress__bar {
+  height: 100%;
+  width: 0;                    /* se anima vía inline style [style.width.%] */
+  transition: width .25s ease;
+  background: linear-gradient(90deg, #0BBBEF, #6aff00);
+}
+.qp-progress__label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: #0b2447;
+}
+
+/* ===== Acciones superiores (limpiar / terminar / contador) ===== */
+.qp-actions {
+  display: flex;
+  justify-content: flex-start;
+  gap: 16px;
+  margin: 10px 0 18px;
+}
+
+/* Tarjeta contenedora genérica (bastidor / lista de tareas) */
+.qp-card {
+  background: var(--qp-panel, #ffffff);
+  border: 2px solid #d6d9dd;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 16px;
+  transition: all 0.25s ease;
+  width: 100%;
+  margin: 0 auto 16px auto;
+  box-sizing: border-box;
+}
+
+/* Botón base (se reutiliza en ghost, primary y task) */
+.qp-btn {
+  cursor: pointer;
+  border-radius: 10px;
+  border: 1px solid var(--qp-border);
+  padding: 10px 12px;
+  font-size: 14px;
+  transition: .2s;
+}
+
+/* Variante ghost (usada en “Editar” del modal de finalización) */
+.qp-btn--ghost {
+  border: 1px solid #cfd6e0;
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .1);
+  background-color: #1D71B8;
+  border-radius: 3px;
+}
+.qp-btn--ghost:hover {
+  background: #f2f5f9;
+  border-color: #aab3c2;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, .15);
+  transform: translateY(-1px);
+  color: #000;
+}
+
+/* Variante primary (botones de CTA) */
+.qp-btn--primary {
+  background: #1D71B8;
+  color: #fff;
+  border-radius: 3px;
+  box-shadow: 0 3px 8px rgba(37, 99, 235, .4);
+}
+.qp-btn--primary:hover:not(:disabled) {
+  background: #1e4fd1;
+  box-shadow: 0 5px 12px rgba(37, 99, 235, 0.45);
+  transform: translateY(-1px);
+}
+.qp-btn--primary:disabled {
+  opacity: .6;
+  cursor: not-allowed;
+  color: #000000;
+}
+
+/* ===== Grid de botones de tareas ===== */
+.ch-grid {
+  display: grid;
+  gap: 12px;
+  width: 100%;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+/* Botón de tarea individual */
+.qp-btn--task {
+  width: 100%;
+  border: 1px solid #d6d9dd;
+  border-radius: 10px;
+  background: #f9fafb;
+  text-align: left;
+  color: red;                  /* rojo cuando no está marcada */
+}
+.qp-btn--task.is-done {
+  background: #6aff00;         /* verde cuando está marcada */
+  color: #0b3b10;
+  font-weight: 600;
+}
+.qp-btn--task:hover {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .1);
+}
+
+/* ===== Modal genérico (finalizar y salir con cambios) ===== */
+.qp-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 60px;
+  z-index: 1100;
+}
+.qp-modal {
+  width: 100%;
+  max-width: 610px;
+  background: #ffffff;
+  border: 1px solid #1D71B8;
+  border-radius: 14px;
+  box-shadow: 0 18px 60px rgba(0, 0, 0, .25);
+  overflow: hidden;
+  animation: modal-pop .15s ease-out;
+  font-family: Montserrat Regular, sans-serif;
+  font-size: 20px;
+}
+@keyframes modal-pop {
+  from { transform: scale(.98); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+.qp-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid #1D71B8;
+  background: #1D71B8;
+}
+.qp-modal__title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffffff;
+}
+.qp-modal__img {
+  width: 50px;
+  height: auto;
+  object-fit: contain;
+}
+.qp-modal__body {
+  padding: 18px 16px;
+  color: #334155;
+  margin-bottom: 0;
+}
+.qp-modal__gif {
+  display: block;
+  width: 120px;
+  height: auto;
+  margin: 16px auto 0;
+}
+.qp-modal__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 12px 16px 16px;
+}
+.qp-modal__footer .qp-btn {
+  min-width: 120px;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  transition: all 0.25s ease;
+}
+/* Reestilos específicos de botones dentro del modal */
+.qp-modal__footer .qp-btn--primary {
+  background-color: #ffffff;
+  color: #1D71B8;
+  border: 2px solid #1D71B8;
+}
+.qp-modal__footer .qp-btn--primary:hover:not(:disabled) {
+  background-color: #1D71B8;
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(29, 113, 184, 0.4);
+}
+.qp-modal__footer .qp-btn--ghost {
+  background-color: #ffffff;
+  color: #1D71B8;
+  border: 2px solid #1D71B8;
+}
+.qp-modal__footer .qp-btn--ghost:hover {
+  background-color: #1D71B8;
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(29, 113, 184, 0.4);
+}
+.qp-modal__footer .qp-btn:disabled {
+  opacity: 0.6;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* ===== Contador diario (“Tareas finalizadas hoy”) ===== */
+.qp-badge {
+  align-self: center;
+  padding: 6px 10px;
+  font-weight: 700;
+  font-size: 14px;
+  margin-left: auto;
+  margin-right: 20px;
+}
+
+/* ===== Card de bastidor ===== */
+.vehicle-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #e9eef5;
+  margin-bottom: 10px;
+}
+.vehicle-card__title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--qp-text);
+}
+.vehicle-card__clean {
+  background: #1D71B8;
+  color: #fff;
+  border: 0;
+  border-radius: 3px;
+  padding: 8px 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(29, 113, 184, .25);
+}
+.vehicle-card__clean:hover { filter: brightness(.95); }
+
+.vehicle-form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  padding-top: 4px;
+}
+.vf-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.vf-label {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--qp-text);
+}
+.vf-input {
+  width: 50%;
+  padding: 10px 12px;
+  border: 1px solid #cfd6e0;
+  border-radius: 8px;
+  font-size: 14px;
+  background: #ffffff;
+}
+.vf-input:focus {
+  outline: none;
+  border-color: #1D71B8;
+  box-shadow: 0 0 0 3px rgba(29,113,184,.15);
+}
+
+/* ===== Responsivo básico ===== */
+@media (max-width: 560px) {
+  .qp-actions { flex-wrap: wrap; }
+  .qp-badge {
+    order: 3;
+    width: 100%;
+    text-align: center;
+    margin-top: 6px;
+  }
+}

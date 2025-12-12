@@ -1,0 +1,607 @@
+/* ============================================================
+   VARIABLES BASE
+   ------------------------------------------------------------
+   Paleta de colores y tipografía general del proyecto.
+   Define colores corporativos, textos y fondo.
+============================================================ */
+:root {
+  --qp-bg: #cae6fc;          /* Fondo general azulado */
+  --qp-panel: #ffffff;       /* Paneles blancos */
+  --qp-border: #e8e8ef;      /* Bordes suaves */
+  --qp-text: #1f2937;        /* Texto principal */
+  --qp-accent: #1D71B8;      /* Azul corporativo */
+  --qp-success: #22c55e;     /* Verde para éxito */
+  --muted: #64748b;          /* Texto secundario */
+}
+
+/* Reset mínimo para asegurar consistencia entre navegadores */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+/* ============================================================
+   LAYOUT GENERAL DE LA APLICACIÓN
+============================================================ */
+.qp-container {
+  background: var(--qp-bg);
+  min-height: 100vh;
+  padding: 70px 16px 24px;   /* espacio superior para cabecera fija */
+  font-family: Montserrat, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: var(--qp-text);
+}
+
+/* ============================================================
+   CABECERA CORPORATIVA FIJA
+============================================================ */
+.qp-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: #ffffff;
+  z-index: 2000;             /* siempre por encima */
+  border-bottom: 1px solid var(--qp-border);
+  margin: 0;
+}
+
+.qp-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.qp-logo {
+  max-width: 130px;
+  height: auto;
+  object-fit: contain;
+}
+
+.qp-company {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.qp-login-info {
+  margin-left: auto;
+  margin-right: 20px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.qp-user-icon {
+  width: 22px;
+  height: 22px;
+}
+
+/* Botón "Cerrar sesión" */
+.qp-logout-btn {
+  background: transparent;
+  color: #1D71B8;
+  border: 2px solid #1D71B8;
+  padding: 6px 14px;
+  border-radius: 3px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: auto;
+  margin-top: 6px;
+  transition: .2s;
+}
+
+.qp-logout-btn:hover {
+  background: #1D71B8;
+  color: #fff;
+}
+
+/* Línea azul inferior decorativa */
+.qp-divider {
+  position: relative;
+  left: 50%;
+  width: 100vw;
+  margin-left: -50vw;
+  height: 12px;
+  background: linear-gradient(45deg, #1d72b8, #0BBBEF);
+}
+
+/* ============================================================
+   LAYOUT DE DOS COLUMNAS (SIDEBAR + CONTENIDO)
+============================================================ */
+.qp-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 16px;
+}
+
+/* ============================================================
+   SIDEBAR (MENÚ LATERAL IZQUIERDO)
+============================================================ */
+.qp-sidenav {
+  background: #fff;
+  border: 1px solid var(--qp-border);
+  border-radius: 10px;
+  padding: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, .06);
+  position: sticky;
+  top: 80px; /* se mantiene visible al hacer scroll */
+  height: fit-content;
+}
+
+/* Enlaces del menú lateral */
+.qp-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: #1f2937;
+  text-decoration: none;
+  cursor: pointer;
+  user-select: none;
+}
+
+.qp-nav-item:hover {
+  background: #eef6ff;
+}
+
+/* Enlace activo (página actual) */
+.qp-nav-item.is-active {
+  background: linear-gradient(45deg, #1d72b8, #0BBBEF);
+  color: #fff;
+  font-weight: 500;
+}
+
+.qp-nav-ico {
+  width: 18px;
+}
+
+/* ============================================================
+   BOTÓN HAMBURGUESA Y DRAWER (RESPONSIVE)
+============================================================ */
+
+/* Botón hamburguesa (oculto en escritorio) */
+.qp-hamburger {
+  display: none;
+  appearance: none;
+  background: #fff;
+  border: 2px solid var(--qp-accent);
+  color: var(--qp-accent);
+  font-size: 26px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.qp-hamburger:hover {
+  background: var(--qp-accent);
+  color: #fff;
+}
+
+/* Medias queries: vista móvil */
+@media (max-width: 1009px) {
+  .qp-hamburger {
+    display: inline-block;
+    margin-right: 8px;
+  }
+
+  /* Sidebar se oculta */
+  .qp-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .qp-sidenav {
+    display: none;
+  }
+}
+
+/* Fondo del drawer al abrirse */
+.qp-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, .45);
+  z-index: 1300;
+}
+
+/* Panel lateral (drawer) en móvil */
+.qp-drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 82vw;
+  max-width: 320px;
+  background: #fff;
+  border-right: 1px solid var(--qp-border);
+  box-shadow: 8px 0 30px rgba(0, 0, 0, .18);
+  z-index: 1310;
+  display: flex;
+  flex-direction: column;
+  animation: drawer-in .16s ease-out;
+  margin-top: 80px;
+}
+
+/* Animación suave de entrada del drawer */
+@keyframes drawer-in {
+  from {
+    transform: translateX(-8px);
+    opacity: .98;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.qp-drawer__head {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px;
+  border-bottom: 1px solid var(--qp-border);
+}
+
+.qp-title {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 30px;
+}
+
+.qp-drawer__nav {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* ============================================================
+   FILTROS (RANGO FECHAS, TRABAJADOR, ÁREA)
+============================================================ */
+
+.filters-card {
+  background: #fff;
+  padding: 18px;
+  border: 1px solid var(--qp-border);
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, .08);
+  margin-bottom: 20px;
+}
+
+/* Rejilla de filtros */
+.filters-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  align-items: end;
+}
+
+/* Adaptación responsive: menos columnas según ancho */
+@media (max-width: 980px) {
+  .filters-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .filters-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* Inputs y selects uniformes */
+.qp-text-input,
+.filters-card select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #cfd6e0;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 14px;
+}
+
+/* Efecto de enfoque */
+.qp-text-input:focus,
+.filters-card select:focus {
+  outline: none;
+  border-color: var(--qp-accent);
+  box-shadow: 0 0 0 3px rgba(29, 113, 184, .15);
+}
+
+/* Inputs de fecha en una fila */
+.date-range {
+  display: flex;
+  gap: 8px;
+}
+
+.date-range .qp-text-input {
+  flex: 1;
+}
+
+/* En pantallas pequeñas se apilan verticalmente */
+@media (max-width: 560px) {
+  .date-range {
+    flex-direction: column;
+  }
+}
+
+.filter-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+/* Botón genérico */
+.qp-btn {
+  cursor: pointer;
+  border-radius: 3px;
+  border: 1px solid var(--qp-border);
+  padding: 10px 12px;
+  font-size: 14px;
+  background: #fff;
+  transition: .2s;
+}
+
+/* Botón "Limpiar filtros" */
+.filter-actions .qp-btn {
+  min-width: 130px;
+  text-align: center;
+  justify-content: center;
+  display: inline-flex;
+}
+
+/* Variación primaria (azul corporativo) */
+.qp-btn--primary {
+  background: #1D71B8;
+  color: #fff;
+  box-shadow: 0 3px 8px rgba(37, 99, 235, .4);
+}
+
+.qp-btn--primary:hover {
+  background: #1e4fd1;
+  transform: translateY(-1px);
+}
+
+/* ============================================================
+   TABLA DE RESULTADOS
+============================================================ */
+
+.bs-card {
+  background: #fff;
+  border: 1px solid var(--qp-border);
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, .08);
+  padding: 18px;
+  margin-bottom: 10px;
+}
+
+/* Cabecera de la tabla */
+.bs-head-row {
+  display: grid;
+  grid-template-columns: 1.2fr 1.2fr 1.2fr 1.2fr;
+  background: #b3cdfb;
+  padding: 12px 10px;
+  border-radius: 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #1f2937;
+}
+
+.bs-head-row .bs-col {
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Cuerpo de tabla */
+.bs-body {
+  margin-top: 4px;
+}
+
+.bs-row {
+  display: grid;
+  grid-template-columns: 1.2fr 1.2fr 1.2fr 1.2fr;
+  padding: 12px 10px;
+  border-bottom: 3px solid #b3cdfb;
+}
+
+.bs-row:last-child {
+  border-bottom: none;
+}
+
+.bs-row:hover {
+  background: #eef6ff;
+}
+
+.bs-cell {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Texto atenuado (no usado en principal) */
+.muted {
+  color: #64748b;
+}
+
+/* Flechas de ordenación */
+.sort-arrow {
+  font-size: 12px;
+  opacity: 0.4;
+  margin-left: 6px;
+  transition: .2s;
+}
+
+.sort-arrow.active {
+  opacity: 1;
+  font-weight: 900;
+}
+
+/* Contador de resultados (debajo de la tabla) */
+.bs-counter {
+  margin: 20px 0 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1f2937;
+}
+
+/* ============================================================
+   RESPONSIVE — TABLA COMO CARDS EN MÓVIL
+============================================================ */
+@media (max-width: 760px) {
+  .bs-head-row {
+    display: none;
+  }
+
+  /* Cada fila se transforma en tarjeta */
+  .bs-row {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "fecha fecha"
+      "trabajador area";
+    row-gap: 8px;
+    padding: 14px 12px;
+  }
+
+  .bs-row .bs-cell:nth-child(1) {
+    grid-area: fecha;
+    font-weight: 700;
+  }
+
+  .bs-row .bs-cell:nth-child(2) {
+    grid-area: trabajador;
+  }
+
+  .bs-row .bs-cell:nth-child(3) {
+    grid-area: area;
+    white-space: normal;
+  }
+
+  .bs-row .bs-cell {
+    position: relative;
+  }
+
+  /* Etiqueta visible antes de cada valor */
+  .bs-row .bs-cell::before {
+    content: attr(data-label);
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+    margin-bottom: 2px;
+    text-transform: uppercase;
+    letter-spacing: .02em;
+  }
+}
+
+/* Texto rojo para tareas "Pendiente" */
+.bs-cell.pendiente {
+  color: #da1717;
+  font-weight: 600;
+}
+
+.bs-counter {
+  margin-bottom: 10px;
+}
+
+/* ============================================================
+   PAGINACIÓN
+============================================================ */
+.bs-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 14px;
+}
+
+.bs-pagination {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Lista de botones de página */
+.bs-pagination .page-list {
+  display: inline-flex;
+  gap: 6px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Botones de paginación */
+.page-btn {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 10px;
+  border-radius: 10px;
+  border: 1px solid #1d71b8;
+  background: #fff;
+  color: #1d71b8;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .15s ease;
+}
+
+.page-btn .label { margin: 0 4px; }
+
+/* Hover: resalta con fondo azul */
+.page-btn:hover:not(:disabled) {
+  background: #1d71b8;
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(29,113,184,.18);
+  transform: translateY(-1px);
+}
+
+/* Página activa */
+.page-btn.is-active {
+  background: #1d71b8;
+  color: #fff;
+  box-shadow: 0 0 0 2px #1d71b8 inset;
+  cursor: default;
+}
+
+/* Botones deshabilitados */
+.page-btn:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+/* Elipsis (entre bloques de páginas) */
+.page-ellipsis {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  color: #64748b;
+}
+
+/* Vista móvil: oculta texto largo en botones */
+@media (max-width: 560px) {
+  .page-btn .label { display: none; }
+  .bs-page-indicator { font-size: .9rem; }
+}

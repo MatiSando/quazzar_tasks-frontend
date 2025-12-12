@@ -1,0 +1,256 @@
+<!-- ==========================================================
+     ADMIN — GESTIÓN DE USUARIOS (HTML de plantilla)
+     ----------------------------------------------------------
+     Vista con:
+     - Cabecera fija y sesión de usuario
+     - Sidebar de navegación (Admin)
+     - Tabla ordenable: nombre, email, rol, estado
+     - Acciones por fila: editar, reset pass, borrar
+     - Modal reactivo para alta/edición
+     - Drawer móvil (menú responsive)
+========================================================== -->
+
+<!-- src/app/pages/gestion-usuarios/gestion-usuarios.html -->
+<div class="qp-container">
+
+  <!-- ===== CABECERA ===================================================== -->
+  <div class="qp-header">
+    <div class="qp-header-top">
+
+      <!-- Botón hamburguesa: abre/cierra drawer en móvil -->
+      <button type="button" class="qp-hamburger" (click)="toggleSidenav()" aria-label="Abrir menú">
+        ☰
+      </button>
+
+      <!-- Logo corporativo -->
+      <img src="assets/ZZ-2.png" alt="Logo QuazzarPro" class="qp-logo" />
+
+      <!-- Información de empresa + usuario logueado + logout -->
+      <div class="qp-company-info">
+        <h2 class="qp-company">QuaZZar Technologies S.L.</h2>
+        <div class="qp-login-info">
+          <img src="assets/user.png" class="qp-user-icon" />
+          <span class="qp-username">{{ userName() }}</span>
+          <button class="qp-logout-btn" (click)="logout()">Cerrar sesión</button>
+        </div>
+      </div>
+    </div>
+    <!-- Línea inferior azul corporativa -->
+    <div class="qp-divider"></div>
+  </div>
+
+  <!-- ===== LAYOUT 2 COLUMNAS =========================================== -->
+  <div class="qp-layout">
+    <!-- ===== SIDEBAR (navegación admin) =============================== -->
+    <aside class="qp-sidenav">
+      <nav>
+        <!-- Sección actual: Usuarios (activo) -->
+        <a class="qp-nav-item is-active">
+          <span class="qp-nav-ico"></span>
+          <span>Usuarios</span>
+        </a>
+
+        <!-- Enlaces a otras secciones de administración -->
+        <a class="qp-nav-item" [routerLink]="['/gestion-tareas']">
+          <span class="qp-nav-ico"></span>
+          <span>Tareas</span>
+        </a>
+        <a class="qp-nav-item" [routerLink]="['/busquedas']">
+          <span class="qp-nav-ico"></span>
+          <span>Busquedas Avanzadas</span>
+        </a>
+      </nav>
+    </aside>
+
+    <!-- ===== CONTENIDO PRINCIPAL ====================================== -->
+    <main class="qp-main">
+      <!-- Cabecera de la sección: título + CTA "Agregar" -->
+      <div class="qp-header-row">
+        <h2 class="qp-title">Gestión de usuarios</h2>
+        <div class="qp-actions">
+          <!-- Abre modal de alta -->
+          <button class="qp-btn qp-btn--primary nuevo-btn" (click)="openAddModal()">
+            <img src="assets/icons/nuevo_user.png" alt="" class="nuevo-btn__icon" />
+            Agregar nuevo usuario
+          </button>
+
+        </div>
+      </div>
+
+      <!-- ===== CARD contenedora de la tabla ============================ -->
+      <section class="us-card">
+        <!-- Encabezado de tabla (clicable para ordenar por columna) -->
+        <div class="us-head-row">
+          <!-- Columna: nombre -->
+          <div class="us-col" role="button" tabindex="0" (click)="sortBy('full_name')">
+            nombre
+            <span class="sort-arrow" [class.active]="sortKey() === 'full_name'">
+              {{ sortKey() === 'full_name'
+              ? (sortDir() === 'asc' ? '▲' : '▼')
+              : '▲' }}
+            </span>
+          </div>
+
+          <!-- Columna: email -->
+          <div class="us-col" role="button" tabindex="0" (click)="sortBy('email')">
+            email
+            <span class="sort-arrow" [class.active]="sortKey() === 'email'">
+              {{ sortKey() === 'email'
+              ? (sortDir() === 'asc' ? '▲' : '▼')
+              : '▲' }}
+            </span>
+          </div>
+
+          <!-- Columna: rol -->
+          <div class="us-col" role="button" tabindex="0" (click)="sortBy('role')">
+            rol
+            <span class="sort-arrow" [class.active]="sortKey() === 'role'">
+              {{ sortKey() === 'role'
+              ? (sortDir() === 'asc' ? '▲' : '▼')
+              : '▲' }}
+            </span>
+          </div>
+
+          <!-- Columna: estado (activo/inactivo) -->
+          <div class="us-col" role="button" tabindex="0" (click)="sortBy('active')">
+            estado
+            <span class="sort-arrow" [class.active]="sortKey() === 'active'">
+              {{ sortKey() === 'active'
+              ? (sortDir() === 'asc' ? '▲' : '▼')
+              : '▲' }}
+            </span>
+          </div>
+
+          <!-- Columna de acciones (vacía en cabecera) -->
+          <div class="us-col us-col--actions"></div>
+        </div>
+
+        <!-- ===== CUERPO DE TABLA (filas) =============================== -->
+        <div class="us-body">
+          <!-- Fila por cada usuario. trackBy optimiza el *ngFor -->
+          <div class="us-row" *ngFor="let u of sortedRows(); trackBy: trackById"
+            [class.is-selected]="u.id === selectedId()" (click)="selectRow(u.id)">
+
+            <!-- Celda: nombre -->
+            <div class="us-cell" data-label="Nombre">{{ u.full_name }}</div>
+
+            <!-- Celda: email -->
+            <div class="us-cell" data-label="Email">{{ u.email }}</div>
+
+            <!-- Celda: rol -->
+            <div class="us-cell" data-label="Rol">{{ u.role }}</div>
+
+            <!-- Celda: estado visual con badge -->
+            <div class="us-cell" data-label="Estado">
+              <span class="badge" [class.badge--on]="u.active" [class.badge--off]="!u.active">
+                {{ u.active ? 'activo' : 'inactivo' }}
+              </span>
+            </div>
+
+            <!-- Celda: acciones por fila. stopPropagation evita seleccionar fila al pulsar botones -->
+            <div class="us-cell us-cell--actions" data-label="Acciones" (click)="$event.stopPropagation()">
+              <!-- Edita: abre modal con datos del usuario -->
+              <button class="qp-btn qp-btn--edit qp-btn--sm" (click)="openEditModal(u)">
+                Editar
+              </button>
+
+              <!-- Resetea contraseña (confirmación en TS) -->
+              <button class="qp-btn qp-btn--edit qp-btn--sm" (click)="resetPassword(u)">
+                Reset pass
+              </button>
+
+              <!-- Borra usuario (confirmación en TS) -->
+              <button class="qp-btn qp-btn--primary qp-btn--sm" (click)="deleteRow(u.id)">
+                Borrar
+              </button>
+            </div>
+          </div>
+
+          <!-- Estado vacío (no hay filas) -->
+          <div class="us-empty" *ngIf="sortedRows().length === 0">
+            No hay usuarios. Pulsa “Agregar” para crear el primero.
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== MODAL: Alta / Edición de usuario ======================== -->
+      <div class="qp-modal-backdrop" *ngIf="addModalOpen()">
+        <div class="qp-modal">
+          <!-- Cabecera del modal: cambia el título si es edición -->
+          <div class="qp-modal__header">
+            <h3 class="qp-modal__title">{{ editingId ? 'Editar usuario' : 'Nuevo usuario' }}</h3>
+          </div>
+
+          <!-- Formulario reactivo. (ngSubmit) delega en saveUser() -->
+          <form class="qp-modal__body" [formGroup]="addForm" (ngSubmit)="saveUser()">
+            <div class="form-grid">
+              <!-- Campo: nombre completo (requerido, min 3) -->
+              <label class="field field--full">
+                <span class="label">Nombre completo</span>
+                <input type="text" formControlName="full_name" class="qp-text-input" placeholder="Ej: Ana García" />
+                <small class="error" *ngIf="addForm.controls.full_name.touched && addForm.controls.full_name.invalid">
+                  Introduce al menos 3 caracteres.
+                </small>
+              </label>
+
+              <!-- Campo: email (requerido, formato email) -->
+              <label class="field field--full">
+                <span class="label">Email</span>
+                <input type="email" formControlName="email" class="qp-text-input" placeholder="usuario@empresa.com" />
+                <small class="error" *ngIf="addForm.controls.email.touched && addForm.controls.email.invalid">
+                  Introduce un email válido.
+                </small>
+              </label>
+
+              <!-- Campo: rol (user/admin) -->
+              <label class="field">
+                <span class="label">Rol</span>
+                <select formControlName="role" class="qp-text-input">
+                  <option value="user">user</option>
+                  <option value="admin">admin</option>
+                </select>
+              </label>
+
+              <!-- Campo: estado (activo) -->
+              <label class="check">
+                <input type="checkbox" formControlName="active" />
+                Activo
+              </label>
+            </div>
+
+            <!-- Pie del modal: acciones del formulario -->
+            <div class="qp-modal__footer">
+              <button type="button" class="qp-btn qp-btn--ghost" (click)="closeAddModal()">Cancelar</button>
+              <button type="submit" class="qp-btn qp-btn--primary" [disabled]="addForm.invalid">Guardar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <!-- ===== /MODAL =================================================== -->
+
+      <!-- ===== DRAWER MÓVIL (menú lateral responsive) ================== -->
+      <!-- Fondo semitransparente para cerrar al tocar fuera -->
+      <div class="qp-drawer-backdrop" *ngIf="sidenavOpen()" (click)="closeSidenav()" aria-hidden="true"></div>
+
+      <!-- Drawer con mismo contenido que el sidebar -->
+      <aside class="qp-drawer" *ngIf="sidenavOpen()" role="dialog" aria-label="Menú lateral">
+        <div class="qp-drawer__head">
+          <strong class="qp-drawer__title">Menú</strong>
+        </div>
+
+        <nav class="qp-drawer__nav" (click)="closeSidenav()">
+          <a class="qp-nav-item is-active">
+            <span class="qp-nav-ico"></span><span>Usuarios</span>
+          </a>
+          <a class="qp-nav-item" [routerLink]="['/gestion-tareas']">
+            <span class="qp-nav-ico"></span><span>Tareas</span>
+          </a>
+          <a class="qp-nav-item" [routerLink]="['/busquedas']">
+            <span class="qp-nav-ico"></span><span>Busquedas</span>
+          </a>
+        </nav>
+      </aside>
+
+    </main>
+  </div>
+</div>

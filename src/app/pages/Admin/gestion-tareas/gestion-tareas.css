@@ -1,0 +1,721 @@
+/* ============================================================
+    VARIABLES BASE
+    ------------------------------------------------------------
+    Colores y variables reutilizables en todo el CSS.
+============================================================ */
+:root {
+  --qp-bg: #cae6fc;
+  --qp-panel: #ffffff;
+  --qp-border: #e8e8ef;
+  --qp-text: #1f2937;
+  --qp-accent: #1D71B8;
+  --qp-success: #22c55e;
+
+  --muted: #64748b;
+}
+
+/* ============================================================
+   RESET BÁSICO
+   ------------------------------------------------------------
+   Unifica el modelo de caja y elimina márgenes por defecto.
+============================================================ */
+/* Reset mínimo */
+* {
+  box-sizing: border-box
+}
+
+html,
+body {
+  height: 100%
+}
+
+body {
+  margin: 0
+}
+
+/* ============================================================
+   LAYOUT GENERAL
+   ------------------------------------------------------------
+   Contenedor raíz con padding superior para cabecera fija.
+============================================================ */
+/* ===== Layout general ===== */
+.qp-container {
+  background: var(--qp-bg);
+  min-height: 100vh;
+  padding: 70px 16px 24px; /* deja sitio a la cabecera fija */
+  font-family: Montserrat, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: var(--qp-text);
+}
+
+
+/* ============================================================
+   CABECERA CORPORATIVA (FIJA)
+   ------------------------------------------------------------
+   Cabecera fija con logo, empresa y controles de sesión.
+============================================================ */
+/* ===== Header corporativo ===== */
+.qp-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: #ffffff;
+  z-index: 2000; /* por encima del resto */
+  border-bottom: 1px solid var(--qp-border);
+  margin: 0;
+}
+
+.qp-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.qp-logo {
+  max-width: 130px;
+  height: auto;
+  object-fit: contain;
+}
+
+.qp-company {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--qp-text);
+  margin: 0;
+}
+
+/* Usuario / sesión */
+.qp-login-info {
+  margin-left: auto;
+  margin-right: 20px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.qp-user-icon {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+/* Botón Logout */
+.qp-logout-btn {
+  background: transparent;
+  color: #1D71B8;
+  border: 2px solid #1D71B8;
+  padding: 6px 14px;
+  border-radius: 3px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: auto;
+  margin-top: 6px;
+  transition: .2s; /* hover suave */
+}
+
+.qp-logout-btn:hover {
+  background: #1D71B8;
+  color: white;
+}
+
+/* Barra azul corporativa */
+.qp-divider {
+  position: relative;
+  left: 50%;
+  width: 100vw;           /* fuerza tomar todo el viewport */
+  margin-left: -50vw;     /* centra el gradiente */
+  height: 12px;
+  background: linear-gradient(45deg, #1d72b8, #0BBBEF);
+}
+
+/* ============================================================
+   GRID PRINCIPAL (2 COLUMNAS)
+   ------------------------------------------------------------
+   Sidebar + contenido con responsive a una columna.
+============================================================ */
+/* ===== Grid 2 columnas: sidebar + main ===== */
+.qp-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+@media (max-width: 860px) {
+  .qp-layout {
+    grid-template-columns: 1fr; /* una columna en móvil */
+  }
+}
+
+/* ============================================================
+   SIDEBAR / NAVEGACIÓN LATERAL
+============================================================ */
+/* Sidebar */
+.qp-sidenav {
+  background: #fff;
+  border: 1px solid var(--qp-border);
+  border-radius: 10px;
+  padding: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, .06);
+  position: sticky;
+  top: 80px; /* se mantiene visible al hacer scroll */
+  height: fit-content;
+}
+
+
+.qp-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: #1f2937;
+  text-decoration: none;
+  cursor: pointer;
+  user-select: none;
+
+}
+
+.qp-nav-item:hover {
+  background: #eef6ff;
+}
+
+.qp-nav-item.is-active {
+  background: linear-gradient(45deg, #1d72b8, #0BBBEF);
+  color: #fff;
+  font-weight: 500;
+}
+
+.qp-nav-ico {
+  width: 18px
+}
+
+/* ============================================================
+   ÁREA DE CONTENIDO PRINCIPAL
+============================================================ */
+/* Main */
+.qp-main {
+  min-width: 0 /* evita overflow en grids/flex */
+}
+
+/* Título + volver */
+.qp-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 6px;
+}
+
+.qp-title {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 30px;
+}
+
+/* Botón volver/panel */
+.qp-back-btn {
+  background: #fff;
+  color: var(--qp-accent);
+  border: 2px solid var(--qp-accent);
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.qp-back-btn:hover {
+  background: var(--qp-accent);
+  color: #fff;
+}
+
+/* ============================================================
+   BOTONERA PRINCIPAL (ACCIONES)
+============================================================ */
+/* ===== Botonera principal ===== */
+.qp-actions {
+  display: flex;
+  gap: 16px;
+  margin: 20px 0 24px;
+}
+
+.nuevo-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.nuevo-btn__icon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;}
+
+
+/* Botón base reutilizable */
+.qp-btn {
+  cursor: pointer;
+  border-radius: 3px;
+  border: 1px solid var(--qp-border);
+  padding: 10px 12px;
+  font-size: 14px;
+  background: #fff;
+  transition: .2s;
+}
+
+/* Variante primaria (acciones importantes) */
+.qp-btn--primary {
+  background: #1D71B8;
+  color: #fff;
+  border-radius: 3px;
+  box-shadow: 0 3px 8px rgba(37, 99, 235, .4);
+}
+
+.qp-btn--primary:hover:not(:disabled) {
+  background: #1e4fd1;
+  box-shadow: 0 5px 12px rgba(37, 99, 235, .45);
+  transform: translateY(-1px);
+}
+
+.qp-btn--primary:disabled {
+  opacity: .6;
+  cursor: not-allowed;
+  color: #000;
+}
+
+/* Botón secundario (editar) */
+.qp-btn--edit {
+  background: transparent;
+  color: #1D71B8;
+  border: 2px solid #1D71B8;
+  padding: 6px 14px;
+  border-radius: 3px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: auto;
+  transition: .2s;
+}
+
+.qp-btn--edit:hover:not(:disabled) {
+  background: #1e4fd1;
+  box-shadow: 0 5px 12px rgba(37, 99, 235, .45);
+  transform: translateY(-1px);
+  color: white;
+}
+
+/* Tamaño pequeño (uso en celdas/acciones) */
+.qp-btn--sm {
+  padding: 8px 12px;
+  font-size: 13px
+}
+
+/* ============================================================
+   CARD + TABLA DE TAREAS (ADMIN)
+   ------------------------------------------------------------
+   Estructura en grid: 5 columnas + fila de acciones.
+============================================================ */
+/* ===== Card + tabla TAREAS  ===== */
+.qt-card {
+  background: #fff;
+  border: 1px solid var(--qp-border);
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, .08);
+  padding: 18px;
+}
+
+/* 5 columnas: nombre, sección, componente, estado, acciones  */
+.qt-head-row {
+  display: grid;
+  grid-template-columns: 1.2fr 1.2fr 1.2fr .7fr 160px;
+  background: #b3cdfb;
+  border-radius: 8px;
+  padding: 12px 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: #1f2937;
+}
+
+.qt-col--actions {
+  text-align: right
+}
+
+.qt-body {
+  margin-top: 4px
+}
+
+.qt-row {
+  display: grid;
+  grid-template-columns: 1.2fr 1.2fr 1.2fr .7fr 160px;
+  align-items: center;
+  padding: 12px 10px;
+  border-bottom: 3px solid #b3cdfb;
+  ;
+  column-gap: 8px;
+  cursor: pointer;
+}
+
+.qt-row:last-child {
+  border-bottom: none
+}
+
+.qt-row:hover {
+  background: #f8fbff
+}
+
+.qt-row.is-selected {
+  background: #e7f0ff;
+  border-left: 4px solid var(--qp-accent);
+}
+
+.qt-cell {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.qt-cell--actions {
+  text-align: right;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.qt-head-row .qt-col {
+  cursor: pointer;
+  user-select: none;
+}
+
+.qt-head-row .qt-col.qt-col--actions {
+  cursor: default;
+}
+
+/* Badges de estado */
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #475569;
+}
+
+.badge--on {
+  color: #27d66d;
+}
+
+.badge--off {
+  color: #7c2d12;
+}
+
+/* Estado vacío (cuando no hay filas) */
+.qt-empty {
+  text-align: center;
+  padding: 22px;
+  color: var(--muted);
+}
+
+/* ============================================================
+   MODAL CORPORATIVO (ALTA/EDICIÓN)
+============================================================ */
+/* ===== Modal corporativo  ===== */
+.qp-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 100px; /* baja el modal bajo la cabecera */
+  z-index: 1100;
+}
+
+.qp-modal {
+  width: 100%;
+  max-width: 620px;
+  background: #ffffff;
+  border: 1px solid var(--qp-accent);
+  border-radius: 14px;
+  box-shadow: 0 18px 60px rgba(0, 0, 0, .25);
+  overflow: hidden;
+  animation: modal-pop .15s ease-out;
+  font-family: Montserrat, sans-serif;
+}
+
+@keyframes modal-pop {
+  from {
+    transform: scale(.98);
+    opacity: 0
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1
+  }
+}
+
+.qp-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--qp-accent);
+  background: var(--qp-accent);
+  color: #334155;
+
+}
+
+.qp-modal__title {
+  margin: 0;
+  font-weight: 700;
+  font-size: 20px
+}
+
+.qp-modal__body {
+  padding: 18px 16px;
+  color: #334155
+}
+
+.qp-modal__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 12px 16px 16px
+}
+
+/* Botonera del modal */
+.qp-modal__footer .qp-btn--primary {
+  background-color: #ffffff;
+  color: #1D71B8;
+  border: 2px solid #1D71B8;
+}
+
+.qp-modal__footer .qp-btn--primary:hover:not(:disabled) {
+  background-color: #1D71B8;
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(29, 113, 184, 0.4);
+}
+
+.qp-modal__footer .qp-btn--ghost {
+  background-color: #ffffff;
+  color: #1D71B8;
+  border: 2px solid #1D71B8;
+}
+
+.qp-modal__footer .qp-btn--ghost:hover {
+  background-color: #1D71B8;
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(29, 113, 184, 0.4);
+}
+
+.qp-modal__footer .qp-btn:disabled {
+  opacity: 0.6;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* ============================================================
+   FORMULARIO (GRID + CAMPOS)
+============================================================ */
+/* Formulario del modal */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  align-items: start;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px
+}
+
+.field--full {
+  grid-column: 1 / -1; /* ocupa todo el ancho del grid */
+}
+
+.label {
+  font-weight: 600;
+  font-size: 14px;
+  color: #0b2447
+}
+
+.qp-text-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #cfd6e0;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 14px;
+  transition: box-shadow .2s, border-color .2s;
+}
+
+.qp-text-input:focus {
+  outline: none;
+  border-color: var(--qp-accent);
+  box-shadow: 0 0 0 3px rgba(29, 113, 184, .15)
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px
+}
+
+.error {
+  color: #b91c1c;
+  font-size: 12px
+}
+
+@media (max-width: 700px) {
+  .form-grid {
+    grid-template-columns: 1fr; /* una columna en móvil */
+  }
+}
+
+/* ============================================================
+   HAMBURGUESA (ESCRITORIO OCULTA / MÓVIL MUESTRA)
+============================================================ */
+/* ===== Hamburguesa  ===== */
+.qp-hamburger {
+  display: none;
+  appearance: none;
+  background: #fff;
+  border: 2px solid var(--qp-accent);
+  color: var(--qp-accent);
+  font-size: 26px;
+  line-height: 1;
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.qp-hamburger:active {
+  transform: translateY(1px);
+}
+
+.qp-hamburger:hover {
+  background: var(--qp-accent);
+  color: #fff;
+}
+
+/* ============================================================
+   DRAWER MÓVIL (MENÚ LATERAL RESPONSIVE)
+============================================================ */
+/* ===== Drawer móvil ===== */
+.qp-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  z-index: 1300;
+
+}
+
+.qp-drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 82vw;
+  max-width: 320px;
+  background: #fff;
+  border-right: 1px solid var(--qp-border);
+  box-shadow: 8px 0 30px rgba(0, 0, 0, .18);
+  z-index: 1310;
+  display: flex;
+  flex-direction: column;
+  animation: drawer-slide-in .16s ease-out;
+  margin-top: 80px; /* respeta la cabecera fija */
+}
+
+@keyframes drawer-slide-in {
+  from {
+    transform: translateX(-8px);
+    opacity: .98
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1
+  }
+}
+
+.qp-drawer__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 12px;
+  border-bottom: 1px solid var(--qp-border)
+}
+
+.qp-drawer__title {
+  font-weight: 800
+}
+
+.qp-drawer__close {
+  background: #fff;
+  border: 1px solid var(--qp-border);
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 6px 10px;
+  font-size: 16px
+}
+
+.qp-drawer__close:hover {
+  background: #f2f5f9
+}
+
+.qp-drawer__nav {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px
+}
+
+/* ============================================================
+   RESPONSIVE GLOBAL
+============================================================ */
+/* ===== Responsivo ===== */
+@media (max-width: 1009px) {
+  .qp-sidenav {
+    display: none; /* se oculta en móvil: usa drawer */
+  }
+
+  .qp-hamburger {
+    display: inline-block;
+    margin-right: 8px;
+  }
+
+  .qp-header-top {
+    gap: 10px;
+  }
+
+  .qp-logo {
+    max-width: 120px;
+  }
+
+  .qp-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================================
+   ICONOS DE ORDENACIÓN (FLECHAS)
+============================================================ */
+.sort-arrow {
+  font-size: 12px;
+  opacity: 0.4;
+  margin-left: 6px;
+  transition: .2s;
+}
+
+.sort-arrow.active {
+  opacity: 1;
+  font-weight: 900;
+}

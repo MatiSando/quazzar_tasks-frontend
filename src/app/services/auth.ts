@@ -40,7 +40,8 @@ export class AuthService {
   private http = inject(HttpClient);
 
   // URL base de la API backend (Laravel)
-  private apiUrl = 'http://127.0.0.1:8000/api';
+  private apiUrl = 'https://quazzartasks-backend-production.up.railway.app/api';
+
 
   // ===============================================================
   // MÉTODO: login()

@@ -114,7 +114,8 @@ export interface SnapshotResp {
 @Injectable({ providedIn: 'root' })
 export class TareasService {
   /** Base de la API (considera mover a environment.* para despliegues) */
-  private apiUrl = 'http://127.0.0.1:8000/api';
+  private apiUrl = 'https://quazzartasks-backend-production.up.railway.app/api';
+
 
   constructor(private http: HttpClient) {}
 

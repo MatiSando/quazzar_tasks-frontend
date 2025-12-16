@@ -9,6 +9,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 // ===============================================================
 // Tipos e interfaces auxiliares
@@ -40,8 +41,8 @@ export class AuthService {
   private http = inject(HttpClient);
 
   // URL base de la API backend (Laravel)
-  private apiUrl = 'https://quazzartasks-backend-production.up.railway.app/api';
-
+  private apiUrl = environment.apiUrl;
+//private apiUrl = 'http://127.0.0.1:8000/api';
 
   // ===============================================================
   // MÉTODO: login()

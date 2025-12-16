@@ -18,6 +18,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 /** Valores que usa la API (minúsculas) */
 export type Proceso = 'pintura' | 'chasis' | 'premontaje' | 'montaje';
@@ -114,8 +115,8 @@ export interface SnapshotResp {
 @Injectable({ providedIn: 'root' })
 export class TareasService {
   /** Base de la API (considera mover a environment.* para despliegues) */
-  private apiUrl = 'https://quazzartasks-backend-production.up.railway.app/api';
-
+  private apiUrl = environment.apiUrl;
+//private apiUrl = 'http://127.0.0.1:8000/api';
 
   constructor(private http: HttpClient) {}
 

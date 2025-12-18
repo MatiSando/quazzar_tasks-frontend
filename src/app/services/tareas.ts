@@ -115,7 +115,8 @@ export interface SnapshotResp {
 @Injectable({ providedIn: 'root' })
 export class TareasService {
   /** Base de la API (considera mover a environment.* para despliegues) */
-  private apiUrl = environment.apiUrl;
+  private apiUrl = environment.apiUrl.replace(/\/$/, '');
+
 //private apiUrl = 'http://127.0.0.1:8000/api';
 
   constructor(private http: HttpClient) {}

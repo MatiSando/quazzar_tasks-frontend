@@ -14,6 +14,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
+import { environment } from '../../environments/environment.prod';
 
 // ===============================================================
 // Tipos e interfaces auxiliares
@@ -58,8 +59,8 @@ export class UsuariosService {
   private http = inject(HttpClient);
 
   // URL base de la API
-  private apiUrl = 'http://127.0.0.1:8000/api';
-
+  //private apiUrl = 'http://127.0.0.1:8000/api';
+  private apiUrl = environment.apiUrl;
   // ===============================================================
   // MÉTODO PRIVADO: toFront()
   // ---------------------------------------------------------------
